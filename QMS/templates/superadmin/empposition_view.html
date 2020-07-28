@@ -1,0 +1,39 @@
+{% extends 'common/footerbootstr.html' %}
+{%load static%}
+
+{% block content %}
+
+<table id="dtBasicExample" class="table table-striped table-bordered" style="width:100%">
+
+    <thead>
+        <tr>
+            <th colspan="3" style="text-align:right">
+                <a href="{% url 'QMS:emppositionform'  %}" class="btn btn-primary btn-sm ">Add</a>
+            </th>
+        </tr>
+        <tr>
+            <th>S.no</th>
+            <th>Employee Categorie</th>
+            <th>Action</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        {% for position in empposition %}
+        <tr>
+            <td>{{forloop.counter}}</td>
+            <td>{{ position.emp_posn }}</td>
+
+            <td>
+                <a href="{% url 'QMS:emppositionupdate' position.id %}" class="btn btn-warning btn-sm">Edit</a>
+
+                <a href="{% url 'QMS:emppositiondelete' position.pk %}"  class="btn btn-danger btn-sm">Delete</a>
+            </td>
+        </tr>
+
+        {% endfor %}
+    </tbody>
+</table>
+{% block breadcrumb %} {{block.super}} {% endblock breadcrumb %}
+<a class="btn btn-success" href="{% url 'QMS:homepage' %}"> <i class="fa fa-home"></i>Home</a>
+{% endblock %}

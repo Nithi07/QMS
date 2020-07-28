@@ -1,0 +1,23 @@
+{% extends 'common/base.html' %}
+{%load static%}
+
+{% block breadcrumb %}
+<footer>
+      <link href="{% static 'css/bootstrap.min.css' %} rel="stylesheet" id="bootstrap-css">
+
+      <script type="text/javascript" src="{% static 'js/min3.5.1.js' %}">
+      </script>
+
+      <script type="text/javascript" src="{% static 'js/dataTables.min.js' %}">
+      </script>
+
+
+  <script type="text/javascript">
+  $(document).ready(function (){
+    $('#dtBasicExample').DataTable({
+      "lengthMenu":[[10,25,50,-1],[10,25,50,"All"]]
+    });
+  });
+  </script>
+  </footer>
+{% endblock breadcrumb %}

@@ -1,0 +1,5 @@
+
+{% for auditee in projects %}
+<li><input type="checkbox" name="schedule_auditee_list" value="{{auditee.pk}}"> {{ auditee.list_of_auditee.emp_name }}</li>
+{% endfor %}
+<!-- <input type="text" name="schedule_sub_job_code" value="789"> -->

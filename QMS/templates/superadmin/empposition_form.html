@@ -1,0 +1,20 @@
+{% extends 'common/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+<form method="post" action=".">
+
+    {% csrf_token %}
+
+    <h3>Employee Categorie</h3>
+
+    <div class="col-md-3">
+        {%crispy form%}
+
+   <div>
+
+</form>
+
+{% endblock %}

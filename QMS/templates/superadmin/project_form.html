@@ -1,0 +1,29 @@
+{% extends 'common/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+
+
+
+
+<form method="post" action=".">
+
+
+
+
+    {% csrf_token %}
+
+    <h3>Project Form</h3>
+
+    <div>
+
+        {%crispy form%}
+
+   <div>
+
+
+
+</form>
+
+{% endblock %}

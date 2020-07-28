@@ -1,0 +1,65 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+
+<style>
+div {
+  padding: 30px;
+  border: 1px ;
+}
+</style>
+
+<div>
+    <center>
+      <h2>MR Comment</h2>
+<form method="post" action="." >
+
+    {% csrf_token %}
+        <table class="table table-striped table-bordered" >
+            <tbody>
+        <tr>
+            <th>ISO Ref no</th>
+            <th>Activity Title</th>
+            <th>Evidence (By Auditor)</th>
+            <th>Corrective Action(By Auditee)</th>
+            <th>Verified Reason (By Auditor)</th>
+            <th>Status</th>
+            <th>Mr Comments</th>
+
+        </tr>
+        <tr>
+            <td>{{auditcomments.cls_refno}}</td>
+            <td>{{auditcomments.description}}</td>
+            <td>{{auditcomments.auditor_comments}}</td>
+            <td>{{auditcomments.auditee_comments}}</td>
+            <td>{{auditcomments.verified_comments}}</td>
+            <td><input type="text" name="mr_comments" value="{{auditcomments.mr_comments}}"></td>
+
+            <td><select  name="mr_status" id="Default">
+              <option value="">Select</option>
+              <option value="To Review">To Review</option>
+              <option value="Clarified">Clarified</option>
+              <option value="Accepted">Accepted</option>
+            </select></td>
+
+            <script type="text/javascript">
+              $(function() {
+                  var tempe="{{auditcomments.mr_status}}";
+                  $("#Default").val(tempe);
+              });
+
+            </script>
+        </tr>
+      </tbody>
+   </table>
+<div style="text-align:center">
+  <button type="submit" class="btn btn-success">Save</button>
+  <a href="{% url 'QMS:auditorcommentview' auditcomments.auditschedule_id %}" class="btn btn-dark btn-sm">Back</a>
+</div>
+
+</form>
+
+    </center>
+</div>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends 'common/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<div class="cyan">
+
+<table class="table">
+    <thead>
+
+        <tr>
+            <th class="text-center">Audit Type</th>
+            <th><a href="{% url 'QMS:audittypecreate'  %}" class="btn btn-primary">Add </a></th>
+            <th><a href="{% url 'QMS:audittypeview'  %}" class="btn btn-info">View</a></th>
+        </tr>
+        <tr>
+            <th class="text-center">Auditors List</th>
+            <th><a href="{% url 'QMS:auditorlistform'  %}" class="btn btn-primary">Add </a></th>
+            <th><a href="{% url 'QMS:auditorlistview'  %}" class="btn btn-info">View</a></th>
+        </tr>
+        <tr>
+            <th class="text-center">Project Details</th>
+            <th><a href="{% url 'QMS:projectcreate'  %}" class="btn btn-primary">Add </a></th>
+            <th><a href="{% url 'QMS:projectview'  %}" class="btn btn-info">View</a></th>
+        </tr>
+        <tr>
+            <th class="text-center">Team Wise</th>
+            <th><a href="{% url 'QMS:teamwisecreate'  %}" class="btn btn-primary">Add </a></th>
+            <th><a href="{% url 'QMS:teamwiseview'  %}" class="btn btn-info">View</a></th>
+        </tr>
+        <tr>
+            <th class="text-center">Audit Schedule</th>
+            <th><a href="{% url 'QMS:auditscheduleform'  %}" class="btn btn-primary">Add </a></th>
+            <th><a href="{% url 'QMS:auditscheduleview'  %}" class="btn btn-info">View</a></th>
+        </tr>
+        <tr>
+            <th class="text-center">Employee Categorie</th>
+            <th><a href="{% url 'QMS:emppositionform'  %}" class="btn btn-primary">Add </a></th>
+            <th><a href="{% url 'QMS:emppositionview'  %}" class="btn btn-info">View</a></th>
+        </tr>
+        <tr>
+            <th class="text-center">Employee Department</th>
+            <th><a href="{% url 'QMS:employedeptform'  %}" class="btn btn-primary">Add </a></th>
+            <th><a href="{% url 'QMS:employedeptview'  %}" class="btn btn-info">View</a></th>
+        </tr>
+        <tr>
+            <th class="text-center">Employee Details</th>
+            <th><a href="{% url 'QMS:empdetailsform'  %}" class="btn btn-primary">Add </a></th>
+            <th><a href="{% url 'QMS:empdetailsview'  %}" class="btn btn-info">View</a></th>
+        </tr>
+        <tr>
+            <th class="text-center">Work Manual Details</th>
+            <th><a href="{% url 'QMS:workmanualform'  %}" class="btn btn-primary">Add </a></th>
+            <th><a href="{% url 'QMS:workmanualview'  %}" class="btn btn-info">View</a></th>
+        </tr>
+
+
+    </thead>
+
+
+</table>
+</div>
+
+{% endblock %}

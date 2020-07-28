@@ -1,0 +1,54 @@
+{% extends 'common/base.html' %}
+
+{% block content %}
+<center>
+      <h2>Auditor Comment</h2>
+<form method="post" action="." >
+
+    {% csrf_token %}
+
+    <table style="table table-bordered table-striped; width:100%">
+        <tbody>
+            <tr>
+                <th>Audit Type</th>
+                <th>ISO Ref no</th>
+                <th>Activity Title</th>
+                <th>Evidence (By Auditor)</th>
+                <th>Status</th>
+                <th>Department</th>
+
+            </tr>
+                  <tr>
+                      <td>{{form.audittype}}</td>
+                      <td>{{form.cls_refno}}</td>
+                      <td>{{form.description}}</td>
+                      <td>{{form.auditor_comments}}</td>
+                      <td><select  name="comment_status" required>
+                        <option value="Completed">C</option>
+                        <option value="OFI">OFI</option>
+                        <option value="No change">NC</option>
+                      </select></td>
+                      <td><select  name="department" required>
+                        <option value="">--- Select ---</option>
+                        <option value="Civil">CL</option>
+                        <option value="Mechanical">MECH</option>
+                        <option value="Electrical">ELC</option>
+                        <option value="TL">TL</option>
+                      </select></td>
+                      <td><input type="hidden" name="auditschedule_id" value="0"></td>
+                      <td><input type="hidden" name="workmanual_id" value="0"></td>
+                  </tr>
+        </tbody>
+     </table>
+
+<div style="text-align:center">
+<button type="submit" class="btn btn-success">Submit</button>
+<a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back<span class="glyphicon glyphicon-step-backward"></span></a>
+</div>
+
+</form>
+
+</center>
+</div>
+
+{% endblock %}

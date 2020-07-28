@@ -1,0 +1,30 @@
+{% extends 'common/base.html' %}
+{%load static%}
+
+{% block content %}
+
+<center><h3>Project Report</h3></center><a href="{% url 'QMS:projectreport'  %}"  style="float:right; font-size:30px;" class="glyphicon glyphicon-download-alt"></a>
+<table class="table table-bordered table-sm">
+
+  <tr>
+    <th class="text-center" style="vertical-align: middle;">Project Code</th>
+    <th class="text-center" style="vertical-align: middle;">Project Name</th>
+    <th class="text-center" style="vertical-align: middle;">Q1</th>
+    <th class="text-center" style="vertical-align: middle;">Q2</th>
+    <th class="text-center" style="vertical-align: middle;">Q3</th>
+    <th class="text-center" style="vertical-align: middle;">Q4</th>
+  </tr>
+
+
+  {%for i in details%}
+    <tr>
+      {%for o in i%}
+      <td>{{o}}</td>
+      {%endfor%}
+    </tr>
+  {%endfor%}
+
+</table>
+
+
+{% endblock %}

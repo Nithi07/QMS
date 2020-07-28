@@ -1,0 +1,15 @@
+{% extends 'common/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<form method="post" action=".">
+    {% csrf_token %}
+
+    <h3>Teamwise Form</h3>
+
+        {%crispy form%}
+
+</form>
+
+{% endblock %}

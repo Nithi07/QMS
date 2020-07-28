@@ -1,0 +1,58 @@
+{% extends 'common/base.html' %}
+{%load static%}
+
+{% block content %}
+
+<center><h3>NCR Report</h3></center><a href="{% url 'QMS:ncrreport'  %}"  style="float:right; font-size:30px;" class="glyphicon glyphicon-download-alt"></a>
+<table class="table table-bordered table-sm">
+  <tr >
+    <th colspan="14" class="text-center">4A DESIGN & ENGINEERING PVT LTD.</th>
+  </tr>
+  <tr>
+    <th colspan="4" class="text-center" style="vertical-align: middle;">Document No:4A:FRM:08</th>
+    <th colspan="2" class="text-center" style="vertical-align: middle;">Issue:1</th>
+    <th colspan="5" class="text-center" style="vertical-align: middle;">INTERNAL AUDIT NCR/CAR FOR </th>
+    <th class="text-center" style="vertical-align: middle;">Rev No:A </th>
+    <th colspan="2" class="text-center" style="vertical-align: middle;">Date:01.04.2014</th>
+  </tr>
+  <tr>
+    <th class="text-center" style="vertical-align: middle;" >Job No.</th>
+    <th class="text-center" style="vertical-align: middle;">Audit No</th>
+    <th class="text-center" style="vertical-align: middle;">NCR/CAR No</th>
+    <th class="text-center" style="vertical-align: middle;">Auditor</th>
+    <th class="text-center" style="vertical-align: middle;">Auditee</th>
+    <th class="text-center" style="vertical-align: middle;">Department</th>
+    <th class="text-center" style="vertical-align: middle;">ISO Clause Ref No</th>
+    <th class="text-center" style="vertical-align: middle;">Description</th>
+    <th class="text-center" style="vertical-align: middle;">Observed Non - Conformance</th>
+    <th class="text-center" style="vertical-align: middle;">Root Cause Analysis (What failed in the system to allow this non conformity to occur)</th>
+    <th class="text-center" style="vertical-align: middle;">Correction (What is done to solve this problem)</th>
+    <th class="text-center" style="vertical-align: middle;">Corrective action (What is done to prevent re-occarrence)</th>
+    <th class="text-center" style="vertical-align: middle;">Implementation of Corrective Action</th>
+    <th class="text-center" style="vertical-align: middle;">NCR Closed Date</th>
+  </tr>
+
+  {%for i in details%}
+    <tr>
+      {%for o in i%}
+      <td>{{o}}</td>
+      {%endfor%}
+    </tr>
+  {%endfor%}
+
+
+  <!-- current date -->
+  <script type="text/javascript" src="{% static 'js/min3.5.1.js' %}">
+  </script>
+
+  <script type="text/javascript">
+    n = new Date();
+    y = n.getFullYear();
+    m = n.getMonth() + 1;
+    d = n.getDate();
+    document.getElementById("datepicker").innerHTML = d+"/"+m+"/"+y;
+  </script>
+</table>
+
+
+{% endblock %}

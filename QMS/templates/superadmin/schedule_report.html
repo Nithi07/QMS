@@ -1,0 +1,61 @@
+{% extends 'common/base.html' %}
+{%load static%}
+
+{% block content %}
+
+<center><h3>Audit Schedule Report</h3></center><a href="{% url 'QMS:auditschedulereport'  %}"  style="float:right; font-size:30px;" class="glyphicon glyphicon-download-alt"></a>
+<table class="table table-bordered table-sm">
+  <tr >
+    <th colspan="12" class="text-center">4A DESIGN & ENGINEERING PVT LTD.</th>
+  </tr>
+  <tr>
+    <th colspan="3" class="text-center" style="vertical-align: middle;">Document No:4A:FRM:09</th>
+    <th  class="text-center" style="vertical-align: middle;">Issue:1</th>
+    <th colspan="5" class="text-center" style="vertical-align: middle;">INTERNAL QUALITY AUDIT SCHEDULE FOR THE QUARTER</th>
+    <th class="text-center" style="vertical-align: middle;">Rev No:C</th>
+    <th colspan="2" class="text-center" style="vertical-align: middle;">Date:31.07.2015</th>
+  </tr>
+  <tr>
+    <th rowspan="2" class="text-center" style="vertical-align: middle;" >Audit No</th>
+    <th rowspan="2" class="text-center" style="vertical-align: middle;">Auditee Team</th>
+    <th colspan="3" class="text-center">Jobs to be Audited During the Period</th>
+    <th rowspan="2" class="text-center" style="vertical-align: middle;">Auditor Nominated</th>
+    <th rowspan="2" class="text-center" style="vertical-align: middle;">Scheduled Audit Date</th>
+    <th rowspan="2" class="text-center" style="vertical-align: middle;">Audit Carried out on</th>
+    <th colspan="2" class="text-center" style="vertical-align: middle;">No of NCR</th>
+    <th rowspan="2" class="text-center" style="vertical-align: middle;">Remarks</th>
+    <th rowspan="2" class="text-center" style="vertical-align: middle;">Status of Audit</th>
+  </tr>
+  <tr>
+    {%for o in month%}
+    <th class="text-center" style="vertical-align: middle;">{{o}}</th>
+    {%endfor%}
+    <th class="text-center" style="vertical-align: middle;">Issued</th>
+    <th class="text-center" style="vertical-align: middle;">Closed</th>
+  </tr>
+  {%for i in details%}
+
+    <tr>
+      {%for o in i%}
+      <td>{{o}}</td>
+      {%endfor%}
+    </tr>
+
+  {%endfor%}
+
+
+  <!-- current date -->
+  <script type="text/javascript" src="{% static 'js/min3.5.1.js' %}">
+  </script>
+
+  <script type="text/javascript">
+    n = new Date();
+    y = n.getFullYear();
+    m = n.getMonth() + 1;
+    d = n.getDate();
+    document.getElementById("datepicker").innerHTML = d+"/"+m+"/"+y;
+  </script>
+</table>
+
+
+{% endblock %}

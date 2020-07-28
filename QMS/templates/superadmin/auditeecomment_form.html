@@ -1,0 +1,146 @@
+{% extends 'common/base.html' %}
+{%load static %}
+
+
+{% block content %}
+<style>
+div {
+  padding: 30px;
+  border: 1px ;
+}
+</style>
+
+<div>
+    <center>
+      <h3><b>Auditee Correction Action</b> </h3>
+<form method="post" action=".">
+
+    {% csrf_token %}
+      <table  class="table table-striped table-bordered table-sm" >
+
+          <tr>
+              <th>Audit Type</th>
+              <td>{{ auditschedule.schedule_auditype.audittype }}</td>
+          </tr>
+          <tr>
+              <th>Audit Date</th>
+              <td>{{ auditschedule.schedule_audit_date }}</td>
+          </tr>
+          <tr>
+              <th>Audit Code</th>
+              <td>{{auditschedule.schedule_audit_code}}</td>
+          </tr>
+          <tr>
+              <th>Auditor's Name</th>
+              <td>{% for o in auditschedule.schedule_auditor_list.all %}{{o.auditors.emp_name}} / {% endfor %}</td>
+          </tr>
+          <tr>
+              <th>Auditee's Name</th>
+              <td>{% for o in auditschedule.schedule_auditee_list.all %}{{o.emp_name}} / {% endfor %}</td>
+          </tr>
+
+          <tr>
+                  <td colspan="2" >
+                      <table style="table table-bordered table-striped; width:100%">
+                          <tbody>
+                      <tr>
+
+                          <th class="text-center">ISO Ref no</th>
+                          <th class="text-center">Activity Title</th>
+                          <th class="text-center">Evidence (By Auditor)</th>
+                          <th class="text-center">Corrective Action(By Auditee)</th>
+                          <th class="text-center">Status</th>
+                      </tr>
+
+                      {%for ac in auditcomments %}
+
+                            <!-- <input type="hidden" name="s_id" value="{{ac.id}}"> -->
+                      <tr>
+                          <td class="text-center" style="vertical-align: middle;">{{ac.cls_refno}}</td>
+                          <td class="text-center" style="vertical-align: middle;">{{ac.description}}</td>
+                          <td class="text-center" style="vertical-align: middle;">{{ac.auditor_comments}}</td>
+                          {%if ac.comment_status == 2 and ac.id not in ncrcommentid%}
+                              <input type="hidden" name="with_ncr_commentid" value="{{ac.id|add:0}}">
+                            <td >Root Cause Analysis <br>
+                              {{form2.root_cause_analysis}}<br>
+                              Correction <br>
+                              {{form2.correction}}<br>
+                              Corrective Action <br>
+                              {{form2.corrective_action}}
+                            </td>
+                            <td class="text-center" style="vertical-align: middle;"><select name="auditee_status_ncr">
+                              <option value="0">In Progress</option>
+                              <option value="1">Completed</option>
+                            </select></td>
+                          {%elif ac.comment_status == 2 and ac.id in ncrcommentid%}
+                                {%for nc in ncrcomments%}
+                                <!-- string to integer converter add:0 -->
+                                    {%if ac.id == nc.command_id|add:0%}
+                                        <input type="hidden" name="ncr_id" value="{{nc.id}}">
+                                        <input type="hidden" name="with_ncr_commentid" value="{{ac.id|add:0}}">
+                                        <td>Root Cause Analysis <br>
+                                          <textarea type="text" name="root_cause_analysis" class='form-control' required>{{nc.root_cause_analysis}}</textarea><br>
+                                          Correction <br>
+                                          <textarea type="text" name="correction" class='form-control' required>{{nc.correction}}</textarea><br>
+                                          Corrective Action <br>
+                                          <textarea type="text" name="corrective_action" class='form-control' required>{{nc.corrective_action}}</textarea><br>
+                                        </td>
+                                        <td class="text-center" style="vertical-align: middle;"><select name="auditee_status_ncr">
+                                          <option value="0" {%if ac.auditee_status == 0 %} selected {%endif%}>In Progress</option>
+                                          <option value="1" {%if ac.auditee_status == 1 %} selected {%endif%}>Completed</option>
+                                        </select></td>
+                                    {%endif%}
+                                {%endfor%}
+                          {%elif ac.auditee_comments == None and ac.comment_status != 2 %}
+                          <input type="hidden" name="id" value="{{ac.id}}">
+                          <td>{{form1.auditee_comments}}</td>
+                          <td class="text-center" style="vertical-align: middle;">{{form1.auditee_status}}</td>
+                          {%else%}
+                          <input type="hidden" name="id" value="{{ac.id}}">
+                            <td class="text-center" style="vertical-align: middle;"><textarea type="text" name="auditee_comments" class='form-control' required>{{ac.auditee_comments}}</textarea></td>
+                            <td class="text-center" style="vertical-align: middle;"><select name="auditee_status">
+                              <option value="0" {%if ac.auditee_status == 0 %} selected {%endif%}>In Progress</option>
+                              <option value="1" {%if ac.auditee_status == 1 %} selected {%endif%}>Completed</option>
+                            </select></td>
+                          {%endif%}
+                      </tr>
+
+                      {%endfor%}
+
+                          </tbody>
+                       </table>
+                  </td>
+          </tr>
+      </table>
+
+<div style="text-align:center">
+  <button type="submit" class="btn btn-success">Save</button>
+  <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back<span class="glyphicon glyphicon-step-backward"></span></a>
+  {%if status_satisfied == 1 %}
+  <a href="{% url 'QMS:sendmailauditee' auditschedule.id %}" class="btn btn-success">Submit</a>
+  {%else%}
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">  Submit </button>
+
+  <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <strong>Please Complete all audits...</strong><button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+  {%endif%}
+
+
+</div>
+</form>
+
+    </center>
+</div>
+
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'common/base.html' %}
+
+
+{% block content %}
+
+      <h2>Sample</h2>
+<form method="post" action=".">
+
+    {% csrf_token %}
+    Auditor:<input type="text" name="sample" value=""><br>
+    Auidtee:<input type="text" name="sample" value=""><br>
+    verify:<input type="text" name="sample" value=""><br>
+
+  <button type="submit" class="btn btn-success">Submit</button>
+
+</form>
+
+
+{% endblock %}

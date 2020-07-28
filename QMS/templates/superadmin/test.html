@@ -1,0 +1,200 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <center>
+      {% if auditschedule.schedule_audit_code != None%}
+      <h2>Auditor Comment</h2>
+
+<form method="post" action="." >
+
+    {% csrf_token %}
+
+      <table  class="table table-striped table-bordered table-sm">
+          <tr>
+              <th>Audit Type</th>
+              <td>{{ auditschedule.schedule_auditype.audittype }}</td>
+          </tr>
+          <tr>
+              <th>Audit Date</th>
+              <td>{{ auditschedule.schedule_audit_date }}</td>
+          </tr>
+          <tr>
+              <th>Audit Code</th>
+              <td>{{auditschedule.schedule_audit_code}}</td>
+          </tr>
+          <tr>
+              <th>Auditor's Name</th>
+              <td>{% for o in auditschedule.schedule_auditor_list.all %}{{o.auditors.emp_name}} / {% endfor %}</td>
+          </tr>
+          <tr>
+              <th>Auditee's Name</th>
+              <td>{% for o in auditschedule.schedule_auditee_list.all %}{{o.emp_name}} / {% endfor %}</td>
+          </tr>
+          <tr>
+            <td colspan="2" >
+              <!--below class is important for scrip working -->
+                <table style="table table-bordered table-striped; width:100%">
+                <tbody>
+                    <tr>
+                        <th>ISO Ref no</th>
+                        <th>Activity Title</th>
+                        <th>Evidence (By Auditor)</th>
+                        <th>Status</th>
+                        <th>Department</th>
+                    </tr>
+                    {%for wkm in workmanual%}
+
+                        <tr>
+                                <td style='width:150px'>{{wkm.cls_ref_no}}</td>
+                                <td style='width:200px'>{{wkm.activity_title}}</td>
+                                <td style='width:375px'>{{form.auditor_comments}}</td>
+                                <td style='width:150px'>
+                                  <select style='width:125px' name="auditor_status">
+                                  <option value="">-select-</option>
+                                  <option value="Completed">C</option>
+                                  <option value="OFI">OFI</option>
+                                  <option value="No change">NC</option>
+                                </select></td>
+                                <td style='width:150px'>
+                                  <select style='width:125px' name="department" >
+                                  <option value="">Select</option>
+                                  <option value="Civil">CL</option>
+                                  <option value="Mechanical">MECH</option>
+                                  <option value="Electrical">ELC</option>
+                                  <option value="TL">TL</option>
+                                </select> </td>
+
+                                <input type="hidden" name="audittype" value="{{auditschedule.schedule_auditype.audittype}}">
+                                <input type="hidden" name="cls_refno" value="{{wkm.cls_ref_no}}">
+                                <input type="hidden" name="description" value="{{wkm.activity_title}}">
+                                <input type="hidden" name="auditschedule_id" value="{{auditschedule.id}}">
+                                <input type="hidden" name="workmanual_id" value="{{wkm.id}}">
+                        </tr>
+                        {% endfor %}
+
+                        <table id='table'>
+                        <tr>
+                        <td ><input type="text" style='width:150px'id="new_ffcode" name='cls_ref_no' ></td>
+                        <td style='width:130px'><input type="text" style='width:200px' id="new_ffname" name='activity_title'></td>
+                        <td style='width:390px'><input type="text" id="new_ffdate" name='auditor_comments' class="form-control input-lg" style="height:60px"></td>
+                        <td style='width:150px'>
+
+                          <select name="auditor_status" id="new_fftype" style='width:125px'>
+                            <option value="">-select-</option>
+                            <option value="Completed">C</option>
+                            <option value="OFI">OFI</option>
+                            <option value="No change">NC</option>
+                          </select></td>
+
+                          <td style='width:150px'>
+                            <select style='width:125px' name="department" id="new_ffdept" >
+                            <option value="">Select</option>
+                            <option value="Civil">CL</option>
+                            <option value="Mechanical">MECH</option>
+                            <option value="Electrical">ELC</option>
+                            <option value="TL">TL</option>
+                          </select> </td>
+                          <input type="hidden" name="audittype" value="{{auditschedule.schedule_auditype.audittype}}">
+
+                          <input type="hidden" name="auditschedule_id" value="{{auditschedule.id}}">
+                          <input type="hidden" name="workmanual_id" value="0">
+
+                        </tr>
+
+
+                        </table>
+
+
+                </tbody>
+                                <tfoot>
+                    <tr>
+                        <td colspan="5" style="text-align: left;">
+
+                            <button type="button" class="btn btn-plus custom-icon glyphicon glyphicon-plus" title="Add Row"></button>
+                        </td>
+                    </tr>
+                    <tr>
+                    </tr>
+                </tfoot>
+              </table>
+            </td>
+          </tr>
+      </table>
+
+      <link href="{% static 'css/bootstrap.min.css' %} rel="stylesheet" id="bootstrap-css">
+
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+      </script>
+
+      <script type="text/javascript" src="{% static 'js/min.js' %}">
+      </script>
+
+      <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}">
+      </script>
+
+
+<script type="text/javascript">
+
+  function cloneRow($obj) {
+  $obj = $obj.length ? $obj : $("#table tbody");
+  counter++;
+  if (counter >= 7) {
+    $(".btn-plus").button("disable");
+    return;
+  } else {
+    var b = $obj.find("tr:first");
+    $trLast1 = $obj.find("tr:last");
+    $trNew = b.clone();
+    $trNew.find(".btn-plus").remove();
+    $trNew.find("td:first").append($("<button>", {
+      type: "button",
+      class: "glyphicon glyphicon-trash",
+      title: "Remove"
+    }).button({
+      icon: "ui-icon-minus"
+    }).click(function() {
+      deleteRow(this);
+    }));
+    $trLast1.after($trNew);
+  }
+}
+
+function deleteRow(a) {
+  $(a).closest("tr").remove();
+  $(".btn-plus").button("enable");
+  counter--;
+}
+
+var counter = 0;
+
+$(function() {
+  $(".btn-plus").button({
+    icon: "ui-icon-plus"
+  });
+  $(".btn-plus").click(function() {
+    cloneRow($("#table tbody"));
+  });
+});
+
+</script>
+
+
+<div style="text-align:center">
+  <button type="submit" class="btn btn-success">Save</button>
+  <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back<span class="glyphicon glyphicon-step-backward"></span></a>
+  <a href="#" class="btn btn-success">Submit</a>
+
+</div>
+
+</form>
+{%else%}
+  <h1>Yet to Confirm...</h1>
+{%endif%}
+
+    </center>
+
+
+{% endblock %}

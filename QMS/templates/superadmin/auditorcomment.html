@@ -1,0 +1,81 @@
+{% extends 'common/base.html' %}
+
+
+{% block content %}
+<style>
+div {
+  padding: 30px;
+  border: 1px ;
+}
+</style>
+
+<div>
+    <center>
+      <h2>Auditor Comment</h2>
+<form method="post" action=".">
+
+    {% csrf_token %}
+      <table  class="table table-striped table-bordered table-sm" >
+
+          <tr>
+              <th>Audit Type</th>
+              <td>{{ auditschedule.schedule_auditype.audittype }}</td>
+          </tr>
+          <tr>
+              <th>Audit Date</th>
+              <td>{{ auditschedule.schedule_audit_date }}</td>
+          </tr>
+          <tr>
+              <th>Audit Code</th>
+              <td>{{auditschedule.schedule_audit_code}}</td>
+          </tr>
+          <tr>
+              <th>Auditor's Name</th>
+              <td>{% for o in auditschedule.schedule_auditor_list.all %}{{o.auditors.emp_name}} / {% endfor %}</td>
+          </tr>
+          <tr>
+              <th>Auditee's Name</th>
+              <td>{% for o in auditschedule.schedule_auditee_list.all %}{{o.emp_name}} / {% endfor %}</td>
+          </tr>
+
+          <tr>
+                  <td colspan="2" >
+                      <table style="table table-bordered table-striped; width:100%">
+                          <tbody>
+                      <tr>
+                          <th>ISO Ref no</th>
+                          <th>Description</th>
+                          <th>Evidence (By Auditor)</th>
+                          <th>Status</th>
+                          <th>Department</th>
+                          <th>Action</th>
+                      </tr>
+
+                      {%for auditcmts in auditcomments %}
+                      <tr>
+                          <td>{{auditcmts.cls_refno}}</td>
+                          <td>{{auditcmts.description}}</td>
+
+                          <td>{{form.auditor_comments }}</td>
+                          <td>{{form.comment_status }}</td>
+                          <td>{{ form.department }}</td>
+
+                      </tr>
+                      {%endfor%}
+
+                          </tbody>
+                       </table>
+                  </td>
+          </tr>
+      </table>
+
+<div style="text-align:center">
+  <button type="submit" class="btn btn-success">Submit</button>
+  <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back<span class="glyphicon glyphicon-step-backward"></span></a>
+</div>
+</form>
+
+    </center>
+</div>
+
+{% endblock %}

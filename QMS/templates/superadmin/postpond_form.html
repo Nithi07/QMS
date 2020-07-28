@@ -1,0 +1,75 @@
+{% extends 'common/base.html' %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+
+<div style="padding: 30px;border:1px ;">
+    <center>
+      <h3><b>Postponement Schedule</b> </h3>
+<form method="post" action=".">
+
+    {% csrf_token %}
+
+      <table  class="table table-striped table-bordered table-sm" >
+          <tr>
+              <th>Audit Type</th>
+              <td>{{ auditschedule.schedule_auditype.audittype }}</td>
+          </tr>
+          <tr>
+              <th>Audit Code</th>
+              <td>{{ auditschedule.schedule_audit_code }}</td>
+          </tr>
+          <tr>
+              <th>Job Code</th>
+              <td>{{ auditschedule.schedule_job_code }}</td>
+          </tr>
+
+          <tr>
+              <th>Date of Audit</th>
+              <td>{{ auditschedule.schedule_audit_date }}</td>
+          </tr>
+          <tr>
+              <th>Time of Audit</th>
+              <td>{{ auditschedule.schedule_audit_time }}</td>
+          </tr>
+
+          <tr>
+              <th>List of Auditor's </th>
+              <td>{% for o in auditschedule.schedule_auditor_list.all %}{{o.auditors.emp_name}} / {% endfor %}</td>
+          </tr>
+          <tr>
+              <th>List of Auditee's</th>
+              <td>{% for o in auditschedule.schedule_auditee_list.all %}{{o.emp_name}} / {% endfor %}</td>
+          </tr>
+          <tr>
+              <th>Final Check by Auditor's</th>
+              <td>{% for o in auditschedule.schedule_final_auditor_list.all %}{{o.auditors.emp_name}},<br />{% endfor %}</td>
+          </tr>
+              <tr>
+                  <th>Postponed to</th>
+                  <td>{{form.post_date}}</td>
+              </tr>
+              <tr>
+                <th>Postponed At</th>
+                <td>{{form.post_time}}</td>
+              </tr>
+              <tr>
+                <th>Reason for Postponment</th>
+                <td>{{form.reason}}</td>
+              </tr>
+              <input type="hidden" name="auditschedule_id" value="{{auditschedule.id}}">
+
+      </table>
+
+<div style="text-align:center">
+  <button type="submit" class="btn btn-success">Submit</button>
+  <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back<span class="glyphicon glyphicon-step-backward"></span></a>
+
+</div>
+
+</form>
+
+    </center>
+</div>
+
+{% endblock %}
