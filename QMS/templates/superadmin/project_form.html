@@ -1,29 +1,54 @@
 {% extends 'common/base.html' %}
 {% load crispy_forms_tags %}
-
+{%load static%}
 {% block content %}
 
 
-
-
-
 <form method="post" action=".">
-
-
-
 
     {% csrf_token %}
 
     <h3>Project Form</h3>
 
-    <div>
-
         {%crispy form%}
 
-   <div>
-
-
-
+{% include 'common/datepicker.html' %}
 </form>
 
 {% endblock %}
+
+
+<!-- <div class="pad3">
+  {{form.project_code|as_crispy_field}}
+</div>
+
+<div class="pad3">
+{{form.project_name|as_crispy_field}}
+</div>
+
+<div class="pad3">
+{{form.project_type|as_crispy_field}}
+</div>
+
+<div class='input-group date col-md-4'  id='datetimepicker6' style="padding-top:30px">
+  <div style="display:flex;flex-direction: row;">
+      <label style="width:100px;"><b>Start Date*</b></label> <span style="padding-left:90px;  height:38px">{{form.project_start_date}}</span>
+  </div>
+    <span class="input-group-addon" >
+        <span class="glyphicon glyphicon-calendar" ></span>
+    </span>
+      </div>
+
+<div class='input-group date col-md-4'  id='datetimepicker7' style="padding-top:30px">
+
+            <div style="display:flex;flex-direction: row;">
+                <label style="width:100px;"><b>End Date*</b></label> <span style="padding-left:90px;  height:38px">{{form.project_end_date}}</span>
+            </div>
+            <span class="input-group-addon glyphicon glyphicon-calendar " >
+                <span class="" ></span>
+            </span>
+            </div>
+
+<div class="pad3">
+{{form.project_status|as_crispy_field}}
+</div> -->

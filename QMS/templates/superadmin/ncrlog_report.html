@@ -37,18 +37,7 @@
   {%endfor%}
 
 
-  <!-- current date -->
-  <script type="text/javascript" src="{% static 'js/min3.5.1.js' %}">
-  </script>
-
-  <script type="text/javascript">
-    n = new Date();
-    y = n.getFullYear();
-    m = n.getMonth() + 1;
-    d = n.getDate();
-    document.getElementById("datepicker").innerHTML = d+"/"+m+"/"+y;
-  </script>
 </table>
 
-
+<a href="{% url 'QMS:ncrlogreporttable' %}" class="btn btn-success">Back</a>
 {% endblock %}

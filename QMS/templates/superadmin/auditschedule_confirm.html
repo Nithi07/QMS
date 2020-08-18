@@ -20,7 +20,7 @@
         </tr>
         <tr>
             <th>Audit Date</th>
-            <td>{{ auditschedule.schedule_audit_date }}</td>
+            <td>{{ auditschedule.schedule_audit_date|date:"d-m-Y" }}/{{auditschedule.schedule_audit_time|time:"H:i"}}</td>
         </tr>
         <tr>
             <th>List of Auditees</th>
@@ -31,18 +31,15 @@
             <td>{% for o in auditschedule.schedule_auditor_list.all %}{{o.auditors.emp_name}}/{% endfor %}</td>
         </tr>
         <tr>
-            <th>Final Check by Auditor's</th>
-            <td>{% for o in auditschedule.schedule_final_auditor_list.all %}{{o.auditors.emp_name}}/{% endfor %}</td>
-        </tr>
-        <tr>
-            <th>Department Approval  </th>
-            <td>
+            <th>Department Approval</th>
+            <th>{% for o in confirming_managers %}{{o}}/{%endfor%}</th>
+            <!-- <td>
               {% for o in confirming_managers %}{%if o in confirmed_managers%} {{o}}  Approved <br>{%else%}
               {{form.schedule_department}}
               <input type="submit" value="Approve"><br/>
                 {%endif%}
               {%endfor%}
-              </td>
+              </td> -->
         </tr>
         <tr>
                 <td colspan="2" >
@@ -72,10 +69,11 @@
 
     </table>
                 <div style="text-align:center">
-                  {%if aude_lis|length == approval|length%}
-                  <!-- <a href="" class="btn btn-info">Submit!<span class="glyphicon glyphicon-ok glyphicon-right "></span></a> -->
-                  {%endif%}
-                <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back<span class="glyphicon glyphicon-step-backward"></span></a>
+                  {% for o in confirming_managers %}{%if o in confirmed_managers%} <span class="bg-primary text-white">{{o}}  Approved </span>{%else%}
+                    <a href="{% url 'QMS:confirmingmanagers' o %}" class="btn btn-success">{{o}}</a>
+                    {%endif%}
+                  {%endfor%}
+                <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-info">Back</a>
               </div>
 
         </center>

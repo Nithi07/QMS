@@ -1,4 +1,4 @@
-{% extends 'common/footerbootstr.html' %}
+{% extends 'common/base.html' %}
 {%load static%}
 
 
@@ -28,7 +28,23 @@
             <td>{{ typ.auditcode }}</td>
             <td>
                 <a href="{% url 'QMS:audittypeupdate' typ.id %}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="{% url 'QMS:audittypedelete' typ.id %}" class="btn btn-danger btn-sm">Delete</a>
+
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModalCenter{{forloop.counter}}">  Delete </button>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document" id="{{forloop.counter}}">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Are you sure want to Delete?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+                        <a href="{% url 'QMS:audittypedelete' typ.id %}" class="btn btn-danger btn-sm">Delete</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
 
             </td>
         </tr>
@@ -40,7 +56,7 @@
 
 <a class="btn btn-success" href="{% url 'QMS:homepage' %}"> <i class="fa fa-home"></i>Home</a>
 
-{% block breadcrumb %} {{block.super}} {% endblock breadcrumb %}
+{% include 'common/footerbootstr.html'%}
 
 
 {% endblock %}

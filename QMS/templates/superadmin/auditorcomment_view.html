@@ -1,4 +1,4 @@
-{% extends 'common/footerbootstr.html' %}
+{% extends 'common/base.html' %}
 
 {% load static%}
 {% block content %}
@@ -18,107 +18,30 @@
                     <th>Verified Status</th>
                     <th>Mr Comments</th>
                     <th>Mr Status</th>
-
                 </tr>
             </thead>
             <tbody>
-                {% for typ in auditorcomments %}
-
+                {% for ac in auditorcomments %}
                 <tr>
-                    <td>{{typ.cls_refno}}</td>
-                    <td>{{typ.description}}</td>
-                    <td>{{typ.auditor_comments}}</td>
+                    <td>{{ac.cls_refno}}</td>
+                    <td>{{ac.description}}</td>
+                    <td>{{ac.auditor_comments}}</td>
 
-                    {%if typ.comment_status == 2%}
+                    {%if ac.comment_status == 2%}
                         {%for nc in ncrcomments%}
-                          {%if typ.id == nc.command_id|add:0%}
+                          {%if ac.id == nc.command_id|add:0%}
                               <td>{{nc.corrective_action}}<br>
                               <!-- bootstrap for NCR popup -->
-                              <button type="button" style="background-color:#666600;" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal{{nc.id}}">NCR</button>
+                              <button type="button" style="background-color:#666600;" class="btn btn-primary btn-xs" id='mybutton{{nc.id}}' data-toggle="modal" data-target="#myModal{{nc.id}}">NCR</button>
+
+                                {% include 'common/ajax_load_page.html' %}
 
                               <div class="modal fade" tabindex="-1" id="myModal{{nc.id}}" role="dialog"  aria-hidden="true">
                                 <div class="modal-dialog modal-lg" id = "{{nc.id}}">
                                   <div class="modal-content">
-                                    <table class="table table-striped" style="width:100%">
-                                            <tr>
-                                                <th colspan="10" class="text-center" style="vertical-align: middle;">4A DESIGN AND ENGINEERING PVT.LTD.<br>NON-CONFORMANCE REPORT (NCR) /<br>CORRECTIVE ACTION REPORT (CAR)</th>
-                                            </tr>
-                                            </table>
-                                            <table>
-                                            <tr style="background-color:#FFFFFF">
-                                                  <td style="border:none;">Project Name </td>
-                                                  <td style="border:none;">: /{{nc.job_code}}</td>
-                                                  <td style="border:none;">Project Code</td>
-                                                  <td style="border:none;">:{{nc.job_code}}</td>
-                                              </tr>
-                                              <tr>
-                                                <td style="border:none;">  Audit No</td>
-                                                <td style="border:none;">: {{auditschedule.schedule_audit_code}}</td>
-                                                <td style="border:none;">NCR/CAR No</td>
-                                                <td style="border:none;">:{{nc.ncr_code}}</td>
-                                              </tr >
-                                                  <tr style="background-color:#FFFFFF">
-                                                    <td style="border:none;">Clause Ref</td>
-                                                    <td style="border:none;">:{{typ.cls_refno}} </td>
-                                                    <td style="border:none;">Procedure/Manual Ref.</td>
-                                                    {%for wm in workmanual%}
-                                                      {%if wm.id == typ.workmanual_id_id%}
-                                                        <td style="border:none;">:{% for work in wm.workmanual.all %}{{work.checklist}}/<br/>{%endfor%}</td>
-                                                      {%endif%}
-                                                    {%endfor%}
-                                                  </tr>
+                                    <div id='imported_area{{nc.id}}'>
 
-                                                  <tr>
-                                                    <td style="border:none;">Receiver</td>
-                                                    <td style="border:none;">:{% for o in auditschedule.schedule_auditee_list.all %}{{o.emp_name}}/{% endfor %}</td>
-                                                    <td style="border:none;">Department</td>
-                                                    <td style="border:none;">:{{typ.department.department_name}}</td>
-                                                  </tr>
-                                                  <tr style="background-color:#FFFFFF">
-                                                    <td style="border:none;">Date Issue</td>
-                                                    <td style="border:none;">:{{auditschedule.schedule_audit_date}}</td>
-                                                    <td style="border:none;">Proposed Date To Complete</td>
-                                                    <td style="border:none;">:{{auditschedule.schedule_audit_date}}</td>
-
-                                                  </tr>
-
-                                              </table>
-                                            <table>
-
-
-                                            <tr>
-                                              <th colspan="10">Observed Non-Conformance:<br>{{typ.auditor_comments}}</th>
-                                            </tr>
-                                            <tr>
-                                              <th colspan="10">Root Cause Analysis (What failed in the system to allow this non conformity to occur)<br>{{nc.root_cause_analysis}}</th>
-                                            </tr>
-                                            <tr>
-                                              <th colspan="10">Correction (What is done to solve this problem)<br>{{nc.correction}}</th>
-                                            </tr>
-                                            <tr>
-                                              <th colspan="10">Corrective action (What is done to prevent re-occarrence)<br>{{nc.corrective_action}}</th>
-                                            </tr>
-                                            <tr>
-                                              <th colspan="10">Implementation of Corrective Action<br>NCR Closed Date:<br>{{nc.ncr_closed_on}}</th>
-                                            </tr>
-                                            <tr>
-                                              <th colspan="10"><div class="">
-                                                ({% for o in auditschedule.schedule_auditee_list.all %}{{o.emp_name}}/{% endfor %})<br>Signature of Auditee<br>(signature not required computer generated)
-                                              </div>
-                                            <div style="text-align:right;">
-                                              ({% for o in auditschedule.schedule_auditor_list.all %}{{o.auditors.emp_name}}/{% endfor %})<br>Signature of Auditor <br>(signature not required computer generated)
-                                            </div> </th>
-                                            </tr>
-                                            <tr>
-                                              <th colspan="10"><div class="">
-                                                <input type="checkbox" name="re-audit" {%if auditschedule.schedule_audit_status != 1 %} checked {%endif%}>Require re-audit <input type="checkbox" name="completed" {%if auditschedule.schedule_audit_status == 1 %} checked {%endif%}>satisfactory completion
-                                              </div>
-                                              <div style="text-align:right;">
-                                                signature of MR
-                                              </div>
-                                            </th>
-                                            </tr>
-                                      </table>
+                                    </div>
                                       <div class="modal-footer d-flex justify-content-center" >
                                       <button type="button" class="btn btn-default" style="background-color:#666600;" data-dismiss="modal">Close</button>
                                       </div>
@@ -129,21 +52,20 @@
                               {%endif%}
                           {%endfor%}
                     {%else%}
-                    <td>{{typ.auditee_comments}}</td>
+                    <td>{{ac.auditee_correction}}</td>
                     {%endif%}
-                    <td>{{typ.auditee_status}}</td>
-                    <td>{{typ.verified_comments}}</td>
-                    <td>{{typ.verified_status}}</td>
+                    <td>{%if ac.auditee_status == 0%}In Progress{%elif ac.auditee_status == 1%}Completed{%endif%}</td>
+                    <td>{{ac.verified_comments}}</td>
+                    <td>{%if ac.verified_status == 0%}Yet-verify{%elif ac.verified_status == 1%}Re-submit{%elif ac.verified_status == 2%}Verified{%endif%}</td>
 
-                    <!--   typ.verified_status == 2  -->
-                    <input type="hidden" name="id" value="{{typ.id}}">
-                    {%if typ.mr_comments == None %}<td>{{form.mr_comments}}</td>{%else%}<td><textarea type="text" name="mr_comments" required>{{typ.mr_comments}}</textarea></td>{%endif%}
+                    <input type="hidden" name="id" value="{{ac.id}}">
+                    {%if ac.mr_comments == None %}<td>{{form.mr_comments}}</td>{%else%}<td><textarea type="text" rows= "2" cols="22" name="mr_comments" required>{{ac.mr_comments}}</textarea></td>{%endif%}
 
                     <td><select  name="mr_status" id="MySelect" required>
                       <option value="">--- Select ---</option>
-                      <option value="0" {%if typ.mr_status == 0 %} selected {%endif%}>To Review</option>
-                      <option value="1" {%if typ.mr_status == 1 %} selected {%endif%}>Clarified</option>
-                      <option value="2" {%if typ.mr_status == 2 %} selected {%endif%}>Accepted</option>
+                      <option value="0" {%if ac.mr_status == 0 %} selected {%endif%}>To Review</option>
+                      <option value="1" {%if ac.mr_status == 1 %} selected {%endif%}>Clarified</option>
+                      <option value="2" {%if ac.mr_status == 2 %} selected {%endif%}>Accepted</option>
                     </select></td>
 
                 {% endfor %}
@@ -153,29 +75,13 @@
 
           <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back</a>
           <button type="submit" class="btn btn-success">Save</button>
-          {%if status_satisfied == 1 %}
+
           <a href="{% url 'QMS:sendmailmr' auditschedule.id %}" class="btn btn-success">Submit</a>
-          {%else%}
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">  Submit </button>
 
-          <!-- The Modal -->
-          <div class="modal fade" id="myModal">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                  <strong>Please Complete all audits...</strong><button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-              </div>
-            </div>
-          </div>
-          {%endif%}
         </div>
 
-        {% block breadcrumb %} {{block.super}} {% endblock breadcrumb %}
 </form>
 
+{% include 'common/footerbootstr.html' %}
 
 {% endblock  %}

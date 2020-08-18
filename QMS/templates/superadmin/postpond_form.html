@@ -26,11 +26,11 @@
 
           <tr>
               <th>Date of Audit</th>
-              <td>{{ auditschedule.schedule_audit_date }}</td>
+              <td>{{ auditschedule.schedule_audit_date|date:"d-m-Y" }}</td>
           </tr>
           <tr>
               <th>Time of Audit</th>
-              <td>{{ auditschedule.schedule_audit_time }}</td>
+              <td>{{ auditschedule.schedule_audit_time|time:"H:i" }}</td>
           </tr>
 
           <tr>
@@ -43,7 +43,7 @@
           </tr>
           <tr>
               <th>Final Check by Auditor's</th>
-              <td>{% for o in auditschedule.schedule_final_auditor_list.all %}{{o.auditors.emp_name}},<br />{% endfor %}</td>
+              <td>{% for o in auditschedule.schedule_final_auditor_list.all %}{{o.emp_name}},<br />{% endfor %}</td>
           </tr>
               <tr>
                   <th>Postponed to</th>
@@ -58,12 +58,13 @@
                 <td>{{form.reason}}</td>
               </tr>
               <input type="hidden" name="auditschedule_id" value="{{auditschedule.id}}">
-
+              {% include 'common/datepicker.html' %}
+                {% include 'common/timepicker.html' %}
       </table>
 
 <div style="text-align:center">
   <button type="submit" class="btn btn-success">Submit</button>
-  <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back<span class="glyphicon glyphicon-step-backward"></span></a>
+  <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back</a>
 
 </div>
 

@@ -1,15 +1,13 @@
-{% extends 'common/footerbootstr.html' %}
+{% extends 'common/base.html' %}
 {%load static%}
 
 {% block content %}
 
-
-<table id="dtBasicExample" class="table table-striped table-bordered table-sm" cellspacing="0" width="100%" id='dtBasicExample'>
-
+<table id="dtBasicExample" class="table table-striped table-bordered" style="width:100%">
     <thead>
         <tr>
             <th colspan="11" style="text-align:right">
-              <a href="{% url 'QMS:mrconfirmschedule'  %}" class="btn btn-primary btn-sm">MR Confirm</a>
+              <a href="{% url 'QMS:mrconfirmschedule'  %}" class="btn btn-primary btn-sm">MR Sendmail All</a>
                 <a href="{% url 'QMS:auditscheduleform'  %}" class="btn btn-primary btn-sm ">Add</a>
             </th>
         </tr>
@@ -22,65 +20,59 @@
             <th>Time of Audit</th>
             <th>Audit Status</th>
             <th>Actions</th>
-
         </tr>
     </thead>
     <tbody>
         {% for schedule in auditschedule %}
-          {%if schedule.id not in cancelled_schedules%}
-        <tr>
-            <td>{{forloop.counter}}</td>
-            <td>{{ schedule.schedule_auditype.audittype }}</td>
-            <td>{{ schedule.schedule_audit_code }}</td>
-            <td>{{ schedule.schedule_job_code }}</td>
-            {%if schedule.id in postpond_id%}
-            {%for i in postpond_schedules%}
-            {%if i.auditschedule_id == schedule.id%}
-            <td>{{i.post_date|date:"d-m-Y"}}</td>
-            <td>{{i.post_time|time:"H:i"}}</td>
-            {%endif%}
-            {%endfor%}
-            {%else%}
-            <td>{{ schedule.schedule_audit_date|date:"d-m-Y" }}</td>
-            <td>{{ schedule.schedule_audit_time|time:"H:i" }}</td>
-            <td>{{schedule.comment_status}}</td>
-            {%endif%}
-            <!-- <td>{% for o in schedule.schedule_auditee_list.all %}{{o.emp_name}},<br/>{% endfor %}</td>
-            <td>{% for o in schedule.schedule_auditor_list.all %}{{o.auditors.emp_name}},<br />{% endfor %}</td>
-            <td>{% for o in schedule.schedule_final_auditor_list.all %}{{o.auditors.emp_name}},<br />{% endfor %}</td> -->
-            <td>
-              {%if schedule.schedule_audit_code != None%}
-                  <!-- schedule.id in auditcomments or schedule.id not in aud_typ_all -->
-                <a href="{% url 'QMS:auditorcommentform' schedule.id %}" class="btn btn-primary btn-sm">Auditor</a>
+                  <tr>
+                      <td>{{forloop.counter}}</td>
+                      <td>{{ schedule.schedule_auditype.audittype }}</td>
+                      <td>{{ schedule.schedule_audit_code }}</td>
+                      <td>{{ schedule.schedule_job_code }}</td>
+                      {%if schedule.id in postpond_id%}
+                        {%for i in postpond_schedules%}
+                          {%if i.auditschedule_id == schedule.id%} <td>{{i.post_date|date:"d-m-Y"}}</td> <td>{{i.post_time|time:"H:i"}}</td> {%endif%}
+                        {%endfor%}
+                      {%else%}
+                      <td>{{ schedule.schedule_audit_date|date:"d-m-Y" }}</td>
+                      <td>{{ schedule.schedule_audit_time|time:"H:i" }}</td>
+                      {%endif%}
+                      <td>{%if schedule.audit_comment_status == 0%}Yet to Start{%elif schedule.audit_comment_status == 1%}Auditor and Auditee to Respond{%elif schedule.audit_comment_status == 2%}Auditor to Respond{%elif schedule.audit_comment_status == 3%}Auditee to Respond{%elif schedule.audit_comment_status == 4%}Auditor to Verify{%elif schedule.audit_comment_status == 5%}MR to Respond{%elif schedule.audit_comment_status == 6%}Waiting for Closed
+                        {%elif schedule.audit_comment_status == 7%}Completed{%endif%}</td>
+                      <td>
+                        {%if schedule.schedule_audit_code != None and schedule.schedule_audit_mr_status == 1%}
+                          <a href="{% url 'QMS:auditorcommentform' schedule.id %}" class="btn btn-primary btn-sm">Auditor</a>
+                          <a href="{% url 'QMS:auditeecommentform' schedule.id %}" class="btn btn-primary btn-sm">Auditee</a>
+                          <a href="{% url 'QMS:verifycommentform' schedule.id %}" class="btn btn-primary btn-sm">Verify</a>
+                          <a href="{% url 'QMS:auditorcommentview' schedule.pk%}" class="btn btn-info btn-sm">View</a>
+                          {%if schedule.audit_comment_status != 7 and schedule.id not in postpond_id%}<a href="{% url 'QMS:auditschedulepostpondcreate' schedule.pk %}" class="btn btn-outline-success btn-sm">Postpond</a>{%elif schedule.audit_comment_status != 7 and schedule.id in postpond_id%}<a href="{% url 'QMS:auditschedulepostpondupdate' schedule.pk %}" class="btn btn-outline-success btn-sm">Postpond</a>{%endif%}
+                          {%if schedule.audit_comment_status == 6%}<a href="{% url 'QMS:auditscheduleclosed' schedule.pk %}" class="btn btn-dark btn-sm">Closed</a>{%endif%}
+                        {%endif%}
+                          {%if schedule.schedule_audit_code == None %}  <a href="{% url 'QMS:auditscheduleconfirmview' schedule.pk %}" class="btn btn-info btn-sm">Confirm</a> {%endif%}
 
-                  <!-- schedule.id in verify -->
-                {%if schedule.id in aud_typ_all%}
-                <a href="{% url 'QMS:auditeecommentform' schedule.id %}" class="btn btn-primary btn-sm">Auditee</a>
-                {%else%}
+                          {%if schedule.audit_comment_status != 7 %}
+                          <a href="{% url 'QMS:auditscheduleupdate' schedule.pk %}" class="btn btn-warning btn-sm">Edit</a>
 
-                {%endif%}
-                {%if schedule.id in auditcomments or schedule.id not in aud_typ_all %}
-
-                {%else%}
-                <a href="{% url 'QMS:verifycommentform' schedule.id %}" class="btn btn-primary btn-sm">Verify</a>
-                {%endif%}
-                <a href="{% url 'QMS:auditschedulepostpond' schedule.pk %}" class="btn btn-outline-success btn-sm">Postpond</a>
-                <a href="{% url 'QMS:auditorcommentview' schedule.pk%}" class="btn btn-info btn-sm">View</a>
-
-                {%if schedule.id not in mr_verify and schedule.id in aud_typ_all%}
-                <a href="{% url 'QMS:auditscheduleclosed' schedule.pk %}" class="btn btn-dark btn-sm">Closed</a>
-                {%endif%}
-
-              {%endif%}
-                {%if schedule.schedule_audit_code == None%}
-                <a href="{% url 'QMS:auditscheduleconfirmview' schedule.id %}" class="btn btn-info btn-sm">Confirm</a>
-                {%endif%}
-                <a href="{% url 'QMS:auditscheduleupdate' schedule.pk %}" class="btn btn-warning btn-sm">Edit</a>
-                <a href="{% url 'QMS:auditscheduledelete' schedule.pk %}" class="btn btn-danger btn-sm">Delete</a>
-                <a href="{% url 'QMS:auditschedulecancel' schedule.pk %}" class="btn btn-secondary btn-sm">Cancel</a>
-            </td>
-        </tr>
-        {%endif%}
+                          <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModalCenter{{forloop.counter}}">  Delete </button>
+                          <!-- Modal -->
+                          <div class="modal fade" id="exampleModalCenter{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document" id="{{forloop.counter}}">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLongTitle">Are you sure want to Delete?</h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+                                  <a href="{% url 'QMS:auditscheduledelete' schedule.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <a href="{% url 'QMS:auditschedulecancel' schedule.pk %}" class="btn btn-secondary btn-sm">Cancel</a>
+                          {%endif%}
+                      </td>
+                  </tr>
         {% endfor %}
     </tbody>
 </table>
@@ -88,12 +80,17 @@
 
 <div style="text-align:center">
   <a href="{% url 'QMS:homepage' %}" class="btn btn-success">Home</a>
-  <a href="{% url 'QMS:auditschedulereporttable' %}" class="btn btn-success">Report</a>
-  <a href="{% url 'QMS:ncrreporttable' %}" class="btn btn-success">Report(NCR)</a>
+  <a href="{% url 'QMS:auditschedulereporttable' %}" class="btn btn-success">Schedule Report</a>
+  <a href="{% url 'QMS:ncrreporttable' %}" class="btn btn-success">NCR Report</a>
   <a href="{% url 'QMS:projectreporttable' %}" class="btn btn-success">Project Report</a>
   <a href="{% url 'QMS:ncrlogreporttable' %}" class="btn btn-success">NCR log Report</a>
 </div>
 
-{% block breadcrumb %} {{block.super}} {% endblock breadcrumb %}
+
+{% include 'common/footerbootstr.html'%}
 
 {% endblock %}
+
+<!-- <td>{% for o in schedule.schedule_auditee_list.all %}{{o.emp_name}},<br/>{% endfor %}</td>
+<td>{% for o in schedule.schedule_auditor_list.all %}{{o.auditors.emp_name}},<br />{% endfor %}</td>
+<td>{% for o in schedule.schedule_final_auditor_list.all %}{{o.emp_name}},<br />{% endfor %}</td> -->

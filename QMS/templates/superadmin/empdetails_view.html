@@ -1,4 +1,4 @@
-{% extends 'common/footerbootstr.html' %}
+{% extends 'common/base.html' %}
 {%load static%}
 
 {% block content %}
@@ -20,6 +20,7 @@
             <th> Position</th>
             <th> Reporting to</th>
             <th> Approved by</th>
+                <th> Email Id</th>
             <th> Status</th>
             <th>Actions</th>
         </tr>
@@ -34,18 +35,35 @@
             <td>{{ details.emp_position.emp_posn }}</td>
             <td>{{ details.emp_reporting_to.emp_name }}</td>
             <td>{{ details.emp_approved_by.emp_name }}</td>
-            <td>{{ details.emp_status }}</td>
+              <td>{{ details.emp_email }}</td>
+            <td>{%if details.emp_status == 0 %}Active{%elif details.emp_status == 1 %}Inactive{%elif details.emp_status == 2 %}Hold{%elif details.emp_status == 3 %}Settlement{%endif%}</td>
 
             <td>
                 <a href="{% url 'QMS:empdetailsupdate' details.id %}" class="btn btn-warning btn-sm">Edit</a>
 
-                <a href="{% url 'QMS:empdetailsdelete' details.pk %}" class="btn btn-danger btn-sm">Delete</a>
+
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModalCenter{{forloop.counter}}">  Delete </button>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document" id="{{forloop.counter}}">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Are you sure want to Delete?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+                          <a href="{% url 'QMS:empdetailsdelete' details.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-{% block breadcrumb %} {{block.super}} {% endblock breadcrumb %}
+{% include 'common/footerbootstr.html'%}
 <a href="{% url 'QMS:homepage' %}" class="btn btn-success">Home</a>
 
 {% endblock %}

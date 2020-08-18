@@ -3,16 +3,26 @@
 
 {% block content %}
 
-
+{% include 'common/headercss.html'%}
 <form method="post" action=".">
 
     {% csrf_token %}
 
     <h3>Auditors</h3>
 
-    {%crispy form%}
-
-
+    <div class="container d-flex h-100 dropdown pad3" >
+      <div class="col-form-label col-lg-2">
+        <b>Auditors:</b>  </div><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select
+            </button>
+            <div class=" dropdown-menu left">
+              <a href="#">{{ form.auditors}}</a>
+        </div>
+  </div>
+  <div class="pad3">
+    <input type="reset"  value="Reset" class="btn btn-success">
+    <button type="submit" class="btn btn-success">Submit</button>
+    <a href="{% url 'QMS:auditorlistview' %}" class="btn btn-success">Back</a>
+  </div>
 </form>
 
 {% endblock %}

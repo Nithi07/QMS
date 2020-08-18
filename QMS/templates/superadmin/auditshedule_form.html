@@ -1,15 +1,10 @@
-{% extends 'common/css.html' %}
+{% extends 'common/base.html' %}
 {% load crispy_forms_tags %}
 {% load static %}
+
 {% block content %}
 
-  {% block breadcrumb %} {{block.super}} {% endblock breadcrumb %}
-
-
-
-
-  <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
-
+{% include 'common/headercss.html' %}
 
   <form method="post" action=".">
 
@@ -27,7 +22,6 @@
         </div>
 
 
-
         <div class="pad1">
           {{form.schedule_sub_job_code|as_crispy_field}}
         </div>
@@ -35,22 +29,91 @@
 
         <div class="container d-flex h-100 dropdown pad3" >
           <div class="col-form-label col-lg-2">
-            <b>Auditor List:</b>  </div><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select
-                </button>
+            <b>Auditor List*</b>  </div><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select</button>
                 <div class=" dropdown-menu left">
                       <a href="#" >{{ form.schedule_auditor_list}}</a>
                     </div>
+
           </div>
+
 
 
           <div class="container d-flex h-100 dropdown pad3" >
             <div class="col-form-label col-lg-2">
-              <b>Auditee List:</b>  </div><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select
-                  </button>
+              <b>Auditee List*</b>  </div><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select</button>
                   <div class=" dropdown-menu left">
                     <a href="#" >{{ form.schedule_auditee_list}}</a>
               </div>
-        </div>
+
+          </div>
+
+
+          <div class="pad1">
+
+            {{form.schedule_audit_date|as_crispy_field}}
+
+            {% include 'common/datepicker.html' %}
+          </div>
+
+
+
+          <div class="pad1">
+            {{form.schedule_audit_time|as_crispy_field}}
+            {% include 'common/timepicker.html' %}
+          </div>
+
+
+          <div class="pad1">
+            {{form.schedule_iso_year|as_crispy_field}}
+          </div>
+
+          <div class="container d-flex h-100 dropup pad3" >
+            <div class="col-form-label col-lg-2">
+              <b>Final Auditor List*</b>  </div><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select
+                  </button>
+                  <div class=" dropdown-menu left">
+                        <a href="#" >{{ form.schedule_final_auditor_list}}</a>
+                      </div>
+
+            </div>
+
+
+
+            <div style="display:none;">
+              {{form.schedule_project}}
+
+            </div>
+
+            <center>
+              <div class="pad3">
+                <input type="reset"  value="Reset" class="btn btn-success">
+                <button type="submit" class="btn btn-success">Submit</button>
+                <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back</a>
+              </div>
+            </center>
+
+
+
+            </form>
+
+              {% include 'common/auditschedule_ajax.html' %}
+
+{% endblock %}
+
+<!--
+<input type='text' class="form-control" />
+<span class="input-group-addon">
+            <span class="glyphicon glyphicon-calendar"></span>
+        </span> -->
+
+<!-- <div class="date">
+<label>{{form.schedule_audit_date.label_tag}}</label><div style="padding-left:90px"> <input id="datepicker" name="schedule_audit_date" width="270" /></div>
+{% include 'common/bootstdatapic.html' %}
+</div> -->
+
+
+
+
 
 
                 <!-- <div class="multiselect">
@@ -61,92 +124,3 @@
                       </ul>
 
                     </div> -->
-
-          <div class="pad1">
-            {{form.schedule_audit_date|as_crispy_field}}
-          </div>
-
-          <div class="pad1">
-            {{form.schedule_audit_time|as_crispy_field}}
-          </div>
-
-          <div class="pad1">
-            {{form.schedule_iso_year|as_crispy_field}}
-          </div>
-
-          <div class="container d-flex h-100 dropup pad3" >
-            <div class="col-form-label col-lg-2">
-              <b>Final Auditor List:</b>  </div><button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Select
-                  </button>
-                  <div class=" dropdown-menu left">
-                        <a href="#" >{{ form.schedule_final_auditor_list}}</a>
-                      </div>
-            </div>
-
-            <div >
-              {{form.schedule_project.as_hidden}}
-            </div>
-
-            <center>
-              <div class="pad3">
-                <input type="reset"  value="Reset" class="btn btn-success">
-                <button type="submit" class="btn btn-success">Submit</button>
-                <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back<span class="glyphicon glyphicon-step-backward"></span></a>
-              </div>
-            </center>
-
-            </form>
-
-              <script type="text/javascript">
-
-                $("#id_schedule_job_code").change(function () {
-                    var countryId = $(this).val();
-                    $.ajax({
-                      url: "{% url 'QMS:auditorautocomplete' %}",
-                      data: {
-                        'schedule_job_code': countryId
-                      },
-                      success: function (data) {
-                        $("#id_schedule_auditee_list").html(data);
-                        // var options= response.schedule_auditee_list
-                        // console.log(options)
-                        // $("#id_schedule_auditee_list").empty();
-                        // for(var key in response.schedule_auditee_list){
-                        //   console.log(options[key]);
-                        // }
-                        // $.each(options, function(key, value){
-                        //   console.log(value.list_of_auditee__emp_name)
-                        //   var name = value.list_of_auditee__id
-                        //   $("#id_schedule_auditee_list")
-                        //     .append($('<input type="checkbox" name="schedule_auditee_list" value="{{name}}">',{value : key})
-                        //       .text(value.list_of_auditee__emp_name));
-                        //   // console.log(name[0])
-                        // })
-
-                      }
-                    });
-
-                  });
-
-
-                $("#id_schedule_job_code").change(function () {
-                    var countryId = $(this).val();
-                    $.ajax({
-                      url: "{% url 'QMS:projectyperautocomplete' %}",
-                      data: {
-                        'schedule_job_code': countryId
-                      },
-                      success: function (data) {
-
-                          $("#id_schedule_project").html(data);
-                      }
-                    });
-
-                  });
-
-                </script>
-
-
-
-
-{% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'common/footerbootstr.html' %}
+{% extends 'common/base.html' %}
 {%load static%}
 
 {% block content %}
@@ -29,20 +29,36 @@
             <td>{{forloop.counter}}</td>
             <td>{{ project.project_code }}</td>
             <td>{{ project.project_name }}</td>
-            <td>{{ project.project_type }}</td>
+            <td>{%if project.project_type == 1 %}Project{%else%}Tender{%endif%}</td>
             <td>{{ project.project_start_date|date:"d-m-Y" }}</td>
             <td>{{ project.project_end_date|date:"d-m-Y" }}</td>
-            <td>{{ project.project_status}}</td>
+            <td>{%if project.project_status == 0 %} Active {%elif project.project_status == 1 %} Inactive {%elif project.project_status == 2 %} Hold {%elif project.project_status == 3 %} Cancelled {%endif%}</td>
             <td>
                 <a href="{% url 'QMS:projectupdate' project.id %}" class="btn btn-warning btn-sm">Edit</a>
 
-                <a href="{% url 'QMS:empdetailsdelete' project.pk %}" class="btn btn-danger btn-sm">Delete</a>
+
+                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#exampleModalCenter{{forloop.counter}}">  Delete </button>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModalCenter{{forloop.counter}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document" id="{{forloop.counter}}">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Are you sure want to Delete?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancel</button>
+                              <a href="{% url 'QMS:projectdelete' project.pk %}" class="btn btn-danger btn-sm">Delete</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
             </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-{% block breadcrumb %} {{block.super}} {% endblock breadcrumb %}
+{% include 'common/footerbootstr.html'%}
 <a href="{% url 'QMS:homepage' %}" class="btn btn-success">Home</a>
 
 {% endblock %}

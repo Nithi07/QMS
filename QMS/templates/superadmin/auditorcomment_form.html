@@ -1,13 +1,12 @@
 {% extends 'common/base.html' %}
 
-
 {% load crispy_forms_tags %}
 {% load static %}
-{%load index%}
+
 
 {% block content %}
 
-    <center>
+<center>
 
       <h2>Auditor Comment</h2>
 
@@ -22,7 +21,7 @@
               </tr>
               <tr>
                   <th>Audit Date</th>
-                  <td>{{ auditschedule.schedule_audit_date }}</td>
+                  <td>{{ auditschedule.schedule_audit_date|date:"d-m-Y" }}</td>
               </tr>
               <tr>
                   <th>Audit Code</th>
@@ -39,7 +38,7 @@
               </table>
 
                   <!--below class is important for scrip working -->
-                    <table style="table table-bordered table-striped; width:100%" class=" table order-list" id="myTable">
+                    <table class="table order-list table-striped table-bordered" style="width:100%"  id="myTable">
                     <tbody>
                         <tr>
                             <th>ISO Ref no</th>
@@ -47,67 +46,68 @@
                             <th>Evidence (By Auditor)</th>
                             <th>Status</th>
                             <th>Department</th>
-
                         </tr>
                         <input type="hidden" id="totallength" name="totallength"/>
                         {%if auditschedule.id not in acid %}
-
                             {%for wkm in workmanual%}
                               <tr>
-                                <td><textarea name="cls_refno" rows="3" cols="10" readonly>{{wkm.cls_ref_no}}</textarea></td>
+                                <td><input name="cls_refno" value="{{wkm.cls_ref_no}}" readonly></td>
                                 <td><textarea name="description" rows="3" cols="30" readonly>{{wkm.activity_title}}</textarea></td>
                                 <td>{{form.auditor_comments}}</td>
                                 <td>{{form.comment_status}}</td>
                                 <td>{{form.department}}</td>
-                                <input type="hidden" name="workmanual_id" value="{{wkm.id}}">
-
+                                <input type="hidden" name="workmanual" value="{{wkm.id}}">
                               </tr>
                             {%endfor%}
-
                         {%else%}
+                            {{ formset.management_form|crispy }}
+                                  {% for form in formset.forms %}
+                                        <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ formset.prefix }}">
+                                            {% for field in form.visible_fields %}
+                                              <td>
+                                              {# Include the hidden fields in the form #}
+                                                {% if forloop.first %}
+                                                    {% for hidden in form.hidden_fields %}
+                                                          {{ hidden }}
+                                                    {% endfor %}
+                                                {% endif %}
+                                                {{ field.errors.as_ul }}
 
-                                {{ formset.management_form|crispy }}
-
-                                    {% for form in formset.forms %}
-
-                                            <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ formset.prefix }}">
-                                                {% for field in form.visible_fields %}
-                                                <td>
-                                                    {# Include the hidden fields in the form #}
-                                                    {% if forloop.first %}
-                                                        {% for hidden in form.hidden_fields %}
-                                                            {{ hidden }}
-                                                        {% endfor %}
-                                                    {% endif %}
-                                                    {{ field.errors.as_ul }}
-
-                                                    {{ field }}
+                                                {{ field }}
                                                 </td>
-                                                {% endfor %}
+                                            {% endfor %}
                                             </tr>
                                     {% endfor %}
-
                         {%endif%}
-
-                          <!-- <div>
-                          <br>
-                          <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
-                          </script>
-                          <script src="{% static 'js/formset.js' %}">
-                          </script>
-                          <script type="text/javascript">
-                              $('.formset_row-{{ formset.prefix }}').formset({
-                                  addText: 'add',
-                                  deleteText: 'remove',
-                                  prefix: '{{ formset.prefix }}',
-                              });
-                          </script> -->
 
                         </tbody>
                         </table>
-                    </table>
+                  </table>
+                    <!-- paste here -->
+
+      {%include 'common/auditor_comment_addnew.html' %}
+
+      {%if messages%}
+        {%for message in messages%}
+        <li {%if message.tags%} style="list-style-type: none;" class=" {{message.tags}} " {%endif%}>{{message}}</li>
+        {%endfor%}
+      {%endif%}
+
+    <div style="text-align:center">
+      <input type="button" class="btn btn-success" id="addrow" value="ADD"/>
+      <button type="submit" class="btn btn-success">Save</button>
+      <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back</a>
+      <a href="{% url 'QMS:sendmailauditor' auditschedule.id %}" class="btn btn-success">Submit</a>
+    </div>
+
+  </form>
+
+</center>
 
 
+{% endblock %}
+
+<!-- <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back<span class="glyphicon glyphicon-step-backward"></span></a> -->
 <!--
 
                           </table>
@@ -168,105 +168,3 @@
                 </td>
               </tr>
           </table> -->
-
-          <link href="{% static 'css/bootstrap.min.css' %} rel="stylesheet" id="bootstrap-css">
-
-          <script src="{% static 'js/min3.5.1.js' %}">
-          </script>
-
-          <script type="text/javascript" src="{% static 'js/min.js' %}">
-          </script>
-
-          <script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}">
-          </script>
-
-
-  <script type="text/javascript">
-
-              $(function(){
-         var i =0;
-
-        $("#addrow").click(function(){
-            var AnswerHTML = "";
-            AnswerHTML ='<tr><td><textarea  rows="2" cols="10" name="cls_refno' + i +'" readonly>0</textarea></td>'
-          +' <td><textarea rows="3" cols="30" name="description' + i +'" readonly>General</textarea></td>'
-          +' <td><textarea rows="3" cols="50" name="auditor_comments' + i +'" required></textarea></td>'
-          +' <td><select style="height:30px;"  name="comment_status' + i +'" required><option value="">---Select---</option><option value="0">C</option><option value="1">OFI</option><option value="2">NC</option></select></td>'
-          +' <td><select style="height:30px;"  name="department' + i +'" required><option value="">---Select---</option>{%for dept in employeedept%}<option value="{{dept.id}}">{{dept.dept_code}}</option>{%endfor%}</select></td>'
-          +' <td><input type="button" class="ibtnDel btn btn-md btn-danger" value="Delete"></td></tr>';
-
-        $("table.order-list").append(AnswerHTML);
-        i++;
-          $("#totallength").val(i);
-
-        });
-        });
-
-          $("table.order-list").on("click", ".ibtnDel", function (event) {
-          $(this).closest("tr").remove();
-          i -= 1
-          });
-
-
-
-            //   $(document).ready(function () {
-            // var counter = 0;
-            //
-            // $("#addrow").on("click", function () {
-            //
-            // var text= "<tr><td><textarea class='form-control' name='cls_refno" + counter +"'>0</textarea></td>"
-            //          +"<td><textarea class='form-control' name='description" + counter +"'>General</textarea></td>"
-            //          +"<td><textarea class='form-control' rows='3' cols='50' name='auditor_comments" + counter +"'></textarea></td>"
-            //
-            //          +"<td><select style='height:30px;' name='comment_status" + counter +"'><option value=''>-select-</option><option value='0'>C</option><option value='1'>OFI</option><option value='2'>NC</option></select></td>"
-            //          +"<td><select style='height:30px;' name='department" + counter +"'><option value=''>-select-</option>{%for dept in employeedept%}<option value='{{dept.id}}'>{{dept.dept_code}}</option>{%endfor%}</select></td>"
-            //          +"<td><input type='button' class='ibtnDel btn btn-md btn-danger' value='Delete'></td></tr>";
-            //
-            //
-            // $("table.order-list").append(text);
-            // counter++;
-            // });
-            //
-            //
-            //
-            // $("table.order-list").on("click", ".ibtnDel", function (event) {
-            // $(this).closest("tr").remove();
-            // counter -= 1
-            // });
-            //
-            //
-            // });
-            //
-            //
-            //
-            // function calculateRow(row) {
-            // var price = +row.find('input[name^="price"]').val();
-            //
-            // }
-            //
-            // function calculateGrandTotal() {
-            // var grandTotal = 0;
-            // $("table.order-list").find('input[name^="price"]').each(function () {
-            // grandTotal += +$(this).val();
-            // });
-            // $("#grandtotal").text(grandTotal.toFixed(2));
-            // }
-            //
-
-     </script>
-
-
-    <div style="text-align:center">
-      <input type="button" class="btn btn-success" id="addrow" value="ADD"/>
-      <button type="submit" class="btn btn-success">Save</button>
-      <a href="{% url 'QMS:auditscheduleview' %}" class="btn btn-success">Back<span class="glyphicon glyphicon-step-backward"></span></a>
-      <a href="{% url 'QMS:sendmailauditor' auditschedule.id %}" class="btn btn-success">Submit</a>
-
-    </div>
-
-    </form>
-
-    </center>
-
-
-{% endblock %}

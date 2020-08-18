@@ -1,30 +1,73 @@
-{% extends 'common/base.html' %}
+
+<!DOCTYPE html>
 {%load static%}
+<html lang="en" dir="ltr">
+  <head>
+    <title></title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap4.0.0.min.css' %}">
+    <style type="text/css">
+      table {
+        border:1px solid black;
+        width:90%;
+      }
+      td,th {
+        border:1px solid black;
+        text-align:center;
+      }
+      li {
+        list-style-type: none;
+      }
+      #table1 {
+        border-collapse: collapse;
+      }
 
-{% block content %}
+    </style>
+  </head>
+  <body>
 
-    <table style="border-collapse:collapse;width:100%" class="table table-striped table-bordered table-sm">
-      <tr>
-        <th>S.no</th>
-        <th>Audit No</th>
-        <th>Job Code</th>
-        <th>Type of audit</th>
-        <th>Auditors</th>
-        <th>Auditees</th>
-        <th>Audit Date</th>
-        <th>Audit Time</th>
-      </tr>
-      {%for i in auditschedule%}
-        <tr>
-          <td>{{forloop.counter}}</td>
-          <td>{{i.schedule_audit_code}}</td>
-          <td>{{i.schedule_job_code}}</td>
-          <td>{{i.schedule_auditype.audittype}}</td>
-          <td>{% for o in i.schedule_auditor_list.all %}{{o.auditors.emp_name}},<br />{% endfor %}</td>
-          <td>{% for o in i.schedule_auditee_list.all %}{{o.emp_name}},<br/>{% endfor %}</td>
-          <td>{{i.schedule_audit_date|date:"d-m-Y"}}</td>
-          <td>{{i.schedule_audit_time|time:"H:i"}}</td>
-        </tr>
-        {%endfor%}
-    </table>
-  {% endblock %}
+      {%if mail == 1%}
+        <p>Dear all,<br>
+        <br>
+        Please find below audit auditschedule for this quarter</p>
+      {%endif%}
+      <center>
+            <table id="table1">
+              <tr>
+                <th>S.no</th>
+                <th>Audit No</th>
+                <th>Job Code</th>
+                <th>Type of audit</th>
+                <th>Auditors</th>
+                <th>Auditees</th>
+                <th>Audit Date</th>
+                <th>Audit Time</th>
+              </tr>
+              {%for i in auditschedule%}
+                <tr>
+                  <td>{{forloop.counter}}</td>
+                  <td>{{i.schedule_audit_code}}</td>
+                  <td>{{i.schedule_job_code}}</td>
+                  <td>{{i.schedule_auditype.audittype}}</td>
+                  <td>{% for o in i.schedule_auditor_list.all %}{{o.auditors.emp_name}},<br />{% endfor %}</td>
+                  <td>{% for o in i.schedule_auditee_list.all %}{{o.emp_name}},<br/>{% endfor %}</td>
+                  <td>{{i.schedule_audit_date|date:"d-m-Y"}}</td>
+                  <td>{{i.schedule_audit_time|time:"H:i"}}</td>
+                </tr>
+                {%endfor%}
+            </table><br>
+
+            {%if messages%}
+              {%for message in messages%}
+              <li {%if message.tags%} class=" {{message.tags}} " {%endif%}>{{message}}</li>
+              {%endfor%}
+            {%endif%}
+
+          </center>
+            {%if mail == 0%}
+              <center>
+                  <a href="{% url 'QMS:mrconfirmmail'  %}" class="btn btn-success">Send Mail</a>
+                  <a href="{% url 'QMS:auditscheduleview'  %}" class="btn btn-success">Back</a>
+            </center>
+            {%endif%}
+  </body>
+</html>
