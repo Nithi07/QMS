@@ -1,0 +1,47 @@
+{%load static%}
+
+<!--
+<link rel="stylesheet" href="{% static 'css/datepicker/gijgo.min.css' %}">
+<link rel="stylesheet" href="{% static 'css/datepicker/bootstrap3.3.7.min.css' %}">
+<script src="{% static 'js/datepicker/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'js/datepicker/gijgo.min.js' %}"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
+
+<link rel="stylesheet" href="{% static 'css/datepicker/bootstrap-datepicker1.9.0.min.css' %}">
+<script src="{% static 'js/datepicker/jquery-3.3.1.min.js' %}"></script>
+<script src="{% static 'js/datepicker/bootstrap-datepicker1.9.0.min.js' %}"></script>
+
+
+<script>
+
+    $('#datepicker').datepicker({
+        uiLibrary: 'bootstrap',
+        format:'dd-mm-yyyy',
+        autoclose:true,
+        changeYear:true,
+        changeMonth:true
+    });
+
+
+    $(document).ready(function(){
+       $("#datetimepicker1").datepicker({
+           uiLibrary: 'bootstrap',
+           format: 'dd-mm-yyyy',
+           autoclose: true,
+       }).on('changeDate', function (selected) {
+           var minDate = new Date(selected.date.valueOf());
+           $('#datetimepicker2').datepicker('setStartDate', minDate);
+       });
+
+       $("#datetimepicker2").datepicker({
+           uiLibrary: 'bootstrap',
+           format: 'dd-mm-yyyy',
+           autoclose: true,
+       }).on('changeDate', function (selected) {
+               var minDate = new Date(selected.date.valueOf());
+               $('#datetimepicker1').datepicker('setEndDate', minDate);
+       });
+    });
+
+</script>

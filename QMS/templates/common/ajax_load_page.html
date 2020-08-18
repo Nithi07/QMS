@@ -1,0 +1,34 @@
+
+{%load static%}
+                          <!-- for modal -->
+      <script src="{% static 'js/jquery.min.js' %}"></script>
+      <script src="{% static 'js/bootstrap3.4.0.min.js' %}"></script>
+
+                        <!-- -----------------------  -->
+
+      <link href="{% static 'css/bootstrap.min.css' %} rel="stylesheet" id="bootstrap-css">
+
+      <script type="text/javascript" src="{% static 'js/min3.5.1.js' %}">
+      </script>
+
+      <script type="text/javascript" src="{% static 'js/dataTables.min.js' %}">
+      </script>
+
+      <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+
+  <script type="text/javascript">
+
+    $(function(){
+      $("#mybutton{{nc.id}}").click(function(){
+          $.ajax({
+           url : "{% url 'QMS:verifyajax' %}",
+           data:{'auditcomments_id':{{ac.id}},'ncrcomments_id':{{nc.id}}},
+           success: function(data){
+             $("#imported_area{{nc.id}}").html(data);
+          }
+        });
+
+      });
+    });
+
+  </script>

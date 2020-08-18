@@ -1,0 +1,49 @@
+
+{% load static %}
+                  <!-- For multiselect dropdown -->
+  <script src="{% static 'js/jquery.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap3.4.0.min.js' %}"></script>
+                <!-- --------------------------- -->
+
+  <script src="{% static 'js/jquery-3.3.1.min.js' %}"></script>
+
+  <script type="text/javascript">
+
+    $("#id_schedule_job_code").change(function () {
+        var countryId = $(this).val();
+        $.ajax({
+          url: "{% url 'QMS:auditeeautocomplete' %}",
+          data: {
+            'schedule_job_code': countryId
+          },
+          success: function (data) {
+            $("#id_schedule_auditee_list").html(data);
+
+          }
+        });
+
+      });
+
+
+    $("#id_schedule_job_code").change(function () {
+        var countryId = $(this).val();
+        $.ajax({
+          url: "{% url 'QMS:projectautocomplete' %}",
+          data: {
+            'schedule_job_code': countryId
+          },
+          success: function (data) {
+              $("#id_schedule_project").html(data);
+          }
+        });
+
+      });
+
+
+                    // For dropdown-not to be close one click (also same as dropup menu)
+      $('.dropdown-menu').on("click.bs.dropdown", function (e) {
+        e.stopPropagation();
+
+    });
+
+    </script>
