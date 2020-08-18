@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from QMS.models import Audittype, EmployePosition, EmployeDepartment
 from QMS.form.formcommon import Audittypeform, EmployePositionform, EmployeDepartmentform
-from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, DetailView, TemplateView, CreateView, UpdateView, DeleteView, View
 from django.urls import  reverse_lazy
 
 #Audittype TemplateView
@@ -26,14 +26,6 @@ class AudittypeCreate(CreateView):
     success_url = 'QMS:audittypeview'
     template_name = 'superadmin/audittype.html'
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(AudittypeCreate, self).get_context_data(**kwargs)
-    #     context['audittype'] = 'test'
-    #     return context
-
-    def get_initial(self):
-        self.initial = {'audittype':'test'}
-        return self.initial
 
     def get_success_url(self):
        return reverse_lazy(self.success_url)
@@ -47,8 +39,6 @@ class AudittypeCreate(CreateView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        create_by="admin"
-        create_ip="192.168.2.14"
         form.save()
         return HttpResponseRedirect(self.get_success_url())
 
@@ -67,17 +57,11 @@ class AudittypeUpdate(UpdateView):
          return HttpResponseRedirect(self.get_success_url())
 
 #Audittype DeleteView
-class AudittypeDelete(DeleteView):
-    model = Audittype
-    success_url = 'QMS:audittypeview'
-    template_name = 'superadmin/audittype_confirm_delete.html'
-
-    def get_object(self, queryset=None):
-        """ Hook to ensure object is owned by request.user. """
-        obj = super(AudittypeDelete, self).get_object()
-        return obj
-    def get_success_url(self):
-        return reverse_lazy(self.success_url)
+class AudittypeDelete(View):
+     def ObjectDelete(request,pk):
+         object=Audittype.objects.get(id=pk)
+         object.delete()
+         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 #EmployePosition ListView
 class EmployePositionListview(ListView):
@@ -129,16 +113,10 @@ class EmployePositionUpdate(UpdateView):
 
 #EmployePosition DeleteView
 class EmployePositionDelete(DeleteView):
-    model = EmployePosition
-    success_url = 'QMS:emppositionview'
-    template_name = 'superadmin/empposition_confirm_delete.html'
-
-    def get_object(self, queryset=None):
-        """ Hook to ensure object is owned by request.user. """
-        obj = super(EmployePositionDelete, self).get_object()
-        return obj
-    def get_success_url(self):
-        return reverse_lazy(self.success_url)
+    def ObjectDelete(request,pk):
+        object=EmployePosition.objects.get(id=pk)
+        object.delete()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 #EmployeDepartment ListView
@@ -193,14 +171,21 @@ class EmployeDepartmentUpdate(UpdateView):
 
 #EmployeDepartment DeleteView
 class EmployeDepartmentDelete(DeleteView):
-    model = EmployeDepartment
-    success_url = 'QMS:employedeptview'
-    template_name = 'superadmin/empdept_confirm_delete.html'
+    def ObjectDelete(request,pk):
+        object=EmployeDepartment.objects.get(id=pk)
+        object.delete()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-    def get_object(self, queryset=None):
-        """ Hook to ensure object is owned by request.user. """
-        obj = super(EmployeDepartmentDelete, self).get_object()
-        return obj
-
-    def get_success_url(self):
-        return reverse_lazy(self.success_url)
+#
+# class EmployeDepartmentDelete(DeleteView):
+#     model = EmployeDepartment
+#     success_url = 'QMS:employedeptview'
+#     template_name = 'superadmin/empdept_confirm_delete.html'
+#
+#     def get_object(self, queryset=None):
+#         """ Hook to ensure object is owned by request.user. """
+#         obj = super(EmployeDepartmentDelete, self).get_object()
+#         return obj
+#
+#     def get_success_url(self):
+#         return reverse_lazy(self.success_url)

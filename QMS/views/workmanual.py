@@ -28,10 +28,9 @@ class WorkManualCreate(CreateView):
 
     def get_context_data(self, **kwargs):
         data = super(WorkManualCreate, self).get_context_data(**kwargs)
-        data['form']=WorkManualform()
         data['formset']=ManualCheckListFormSet()
         if self.request.POST:
-            data['activity'] = ManualCheckListFormSet(self.request.POST, instance=self.object)
+            data['activity'] = ManualCheckListFormSet(self.request.POST)
         else:
             data['activity'] = ManualCheckListFormSet()
         return data
@@ -58,10 +57,12 @@ class WorkManualUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         data = super(WorkManualUpdate, self).get_context_data(**kwargs)
+        data['form'] = WorkManualform(instance=self.object)
+        data['formset']=ManualCheckListFormSet(instance=self.object)
         if self.request.POST:
-            data['activity'] = ManualCheckListFormSet(self.request.POST)
+            data['activity'] = ManualCheckListFormSet(self.request.POST, instance=self.object)
         else:
-            data['activity'] = ManualCheckListFormSet()
+            data['activity'] = ManualCheckListFormSet(instance=self.object)
         return data
 
     def form_valid(self, form):
@@ -79,17 +80,10 @@ class WorkManualUpdate(UpdateView):
 
 
 class WorkManuaDelete(DeleteView):
-    model = WorkManual
-    success_url = 'QMS:workmanualview'
-    template_name = 'superadmin/workmanual_confirm_delete.html'
-
-    def get_object(self, queryset=None):
-        """ Hook to ensure object is owned by request.user. """
-        obj = super(WorkManuaDelete, self).get_object()
-        return obj
-
-    def get_success_url(self):
-        return reverse_lazy(self.success_url)
+    def ObjectDelete(request,pk):
+        object=WorkManual.objects.get(id=pk)
+        object.delete()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 class WorkManualaddnewCreate(CreateView):
@@ -108,8 +102,6 @@ class WorkManualaddnewCreate(CreateView):
             data['activity'] = ManualCheckListFormSet(self.request.POST, instance=self.object)
         else:
             data['activity'] = ManualCheckListFormSet(instance=self.object)
-        # import pdb
-        # pdb.set_trace()
         return data
 
     def form_valid(self, form):

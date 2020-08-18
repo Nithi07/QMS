@@ -34,11 +34,6 @@ class EmployeeDetailsCreate(CreateView):
     def post(self, request, *args, **kwargs):
         form = EmployeeDetailsform(request.POST)
         if form.is_valid():
-            # new = form.save(commit=False)
-            # emp_name = form.cleaned_data['emp_name']
-            # name_code  = form.cleaned_data['emp_name'],'-',form.cleaned_data['emp_code']
-            # new.emp_name = ''.join(name_code)
-            # new.save()
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
@@ -64,13 +59,8 @@ class EmployeeDetailsUpdate(UpdateView):
 
 #EmployeeDetails DeleteView
 class EmployeeDetailsDelete(DeleteView):
-    model = EmployeeDetails
-    success_url = 'QMS:empdetailsview'
-    template_name = 'superadmin/empdetails_confirm_delete.html'
 
-    def get_object(self, queryset=None):
-        """ Hook to ensure object is owned by request.user. """
-        obj = super(EmployeeDetailsDelete, self).get_object()
-        return obj
-    def get_success_url(self):
-        return reverse_lazy(self.success_url)
+    def ObjectDelete(request,pk):
+        object=EmployeeDetails.objects.get(id=pk)
+        object.delete()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
