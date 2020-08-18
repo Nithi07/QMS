@@ -1,7 +1,6 @@
 from django.db import models
 
 
-
 class Audittype(models.Model):
    audittype = models.CharField(max_length = 25)
    auditcode = models.CharField(max_length = 25)
@@ -10,15 +9,12 @@ class Audittype(models.Model):
        db_table = 'audittype'
 
 
-
-
 class EmployePosition(models.Model):
 
     emp_posn = models.CharField(max_length=50)
 
     class Meta:
        db_table = 'master_position'
-
 
 
 class EmployeDepartment(models.Model):

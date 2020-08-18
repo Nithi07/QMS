@@ -12,7 +12,7 @@ class WorkManual(models.Model):
 	cls_ref_no = models.CharField(max_length=10)
 	activity_title = models.CharField(max_length=100)
 	ISO_certification_year = models.IntegerField()
-	type_of_projectortender = ArrayField(models.CharField(max_length=10,blank=True),null=True,blank=True,default=list)
+	project_type = ArrayField(models.CharField(max_length=10,blank=True),null=True,blank=True,default=list)
 	explain_of_activity = models.TextField()
 
 	class Meta:
