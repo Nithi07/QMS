@@ -9,15 +9,21 @@ from crispy_forms.layout import Submit, Layout, Div, Fieldset,Reset,Button,HTML,
 
 class Auditorlistform(forms.ModelForm):
 
-    auditors = forms.ModelChoiceField(queryset=EmployeeDetails.objects.all(),empty_label='Select')
-
+    auditors = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple(),queryset=EmployeeDetails.objects.filter(emp_status=0))
 
     def __init__(self, *args, **kwargs):
         super(Auditorlistform, self).__init__(*args, **kwargs)
+        lis = []
+        for i in ListAuditors.objects.all():
+            try:
+                lis.append(i.auditors.id)
+            except:
+                pass
+        self.fields['auditors'].queryset = EmployeeDetails.objects.filter(emp_status=0).exclude(id__in=lis)
         self.fields['auditors'].label_from_instance = lambda obj: "%s" % obj.emp_name
-        self.fields['auditors'].widget.attrs['style'] = 'height:30px;'
         self.helper = FormHelper()
         self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-lg-2'
         self.helper.layout = Layout(Field(
             'auditors'),
             ButtonHolder(

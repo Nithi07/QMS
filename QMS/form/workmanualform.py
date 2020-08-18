@@ -16,7 +16,7 @@ class WorkManualform(forms.ModelForm):
     cls_ref_no = forms.CharField(max_length=10,label="Cls Ref No")
     activity_title = forms.CharField(max_length=100,label='Activity Title')
     ISO_certification_year = forms.CharField(max_length=50,label='ISO Year')
-    type_of_projectortender = forms.MultipleChoiceField(choices=default_choices.type,widget=forms.CheckboxSelectMultiple(),label='Project/Tender')
+    type_of_projectortender = forms.MultipleChoiceField(choices=default_choices.type,widget=forms.CheckboxSelectMultiple(),label='Project/Tender',required=True)
 
     def __init__(self, *args, **kwargs):
         super(WorkManualform, self).__init__(*args, **kwargs)
@@ -32,7 +32,6 @@ class WorkManualform(forms.ModelForm):
                 Field('activity_title'),
                 Field('ISO_certification_year'),
                 Field('type_of_projectortender'),
-                # Fieldset('Add titles'),
                 Field('checklist'),
 
                 Formset('activity'),

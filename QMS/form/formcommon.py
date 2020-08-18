@@ -16,6 +16,8 @@ class Audittypeform(forms.ModelForm):
             super(Audittypeform, self).__init__(*args, **kwargs)
             self.helper = FormHelper()
             self.helper.form_class = 'form-horizontal'
+            self.helper.label_class = 'col-lg-2'
+            # self.helper.field_class = 'col-lg-4'
             self.helper.layout = Layout(Field(
                 'audittype',
                 'auditcode'),
@@ -41,7 +43,6 @@ class EmployePositionform(forms.ModelForm):
             self.helper = FormHelper()
             #self.helper.form_method = 'post'
             #self.helper.form_action = reverse('audittype_view.html')
-            # self.helper.add_input(Submit('submit', 'Submit', css_class='btn-success'))
             self.helper.form_class = 'form-horizontal'
             self.helper.layout = Layout(Field(
                 'emp_posn'),
@@ -66,7 +67,6 @@ class EmployeDepartmentform(forms.ModelForm):
             super(EmployeDepartmentform, self).__init__(*args, **kwargs)
             self.helper = FormHelper()
             self.helper.form_class = 'form-horizontal'
-            # self.helper.label_class = 'col-md-81px'
             self.helper.layout = Layout(Field(
                 'department_name',
                 'dept_code'),

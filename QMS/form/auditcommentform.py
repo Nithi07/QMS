@@ -1,4 +1,5 @@
 from django import forms
+from multivaluefield import MultiValueField
 from QMS import default_choices
 from QMS.models import Auditschedule
 from QMS.models import ListAuditors
@@ -18,16 +19,11 @@ from QMS.custom_layout_object import Formset
 
 class Auditor_commentsForm(forms.ModelForm):
 
-    cls_refno = forms.CharField(widget = forms.Textarea(attrs={'rows': 2, 'cols': 10,'readonly':'readonly'}))
+    cls_refno = forms.CharField(widget = forms.TextInput(attrs={'readonly':'readonly'}))
     description = forms.CharField(widget = forms.Textarea(attrs={'rows': 3, 'cols': 30,'readonly':'readonly'}))
-    auditor_comments = forms.CharField(
-            widget = forms.Textarea(attrs={'rows': 3, 'cols': 50}),
-            )
-
+    auditor_comments = forms.CharField(widget = forms.Textarea(attrs={'rows': 3, 'cols': 50}))
     comment_status = forms.ChoiceField(choices=default_choices.status)
-    department = forms.ModelChoiceField(
-                        queryset=EmployeDepartment.objects.all(),
-                        empty_label = '--- Select ---')
+    department = forms.ModelChoiceField(queryset=EmployeDepartment.objects.all(),required=False,empty_label = '--- Select ---')
 
     def __init__(self, *args, **kwargs):
         super(Auditor_commentsForm, self).__init__(*args, **kwargs)
@@ -42,10 +38,8 @@ class Auditor_commentsForm(forms.ModelForm):
                 Field('auditor_comments'),
                 Field('comment_status'),
                 Field('department'),
-
                 )
             )
-
 
     class Meta:
         model = Audit_comments
@@ -53,44 +47,11 @@ class Auditor_commentsForm(forms.ModelForm):
 
 Auditor_commentsFormset = modelformset_factory(Audit_comments,form=Auditor_commentsForm,extra=0)
 
-# class Auditor_comments_extra_Form(forms.ModelForm):
-#
-#     status = (
-#         ('','select'),
-#         (0,'C'),
-#         (1,'OFI'),
-#         (2,'NC')
-#     )
-#     add_cls_refno = forms.CharField(widget = forms.Textarea(attrs={'rows': 2, 'cols': 10}))
-#     add_description = forms.CharField(widget = forms.Textarea(attrs={'rows': 3, 'cols': 30}),
-#                   required = True)
-#     add_comment_status = forms.ChoiceField(choices=status,required=True)
-#     add_department = forms.ModelChoiceField(
-#                         queryset=EmployeDepartment.objects.all(),
-#                         empty_label = 'Select',required=True)
-#     add_auditschedule_id = forms.IntegerField(widget=forms.HiddenInput())
-#     add_auditor_comments = forms.CharField(
-#             widget = forms.Textarea(attrs={'rows': 3, 'cols': 50}),
-#             required = True
-#             )
-#
-#     def __init__(self, *args, **kwargs):
-#         super(Auditor_comments_extra_Form, self).__init__(*args, **kwargs)
-#         self.fields['add_department'].label_from_instance = lambda obj: "%s" % obj.dept_code
-#
-#
-#     class Meta:
-#         model = Audit_comments_extra
-#         fields = ['add_auditschedule_id','add_cls_refno','add_description','add_auditor_comments','add_comment_status','add_department']
-#
-
-# Auditor_commentsFormset = inlineformset_factory(Audit_comments, Audit_comments_extra, form=Auditor_comments_extra_Form,extra=1, can_delete=True)
-
 
 class Auditee_commentsForm(forms.ModelForm):
 
     auditee_status = forms.ChoiceField(choices=default_choices.auditeechoice)
-    auditee_comments = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'cols': 70}))
+    auditee_correction = forms.CharField(widget=forms.Textarea(attrs={'rows': 3, 'cols': 70}))
 
     def __init__(self, *args, **kwargs):
         super(Auditee_commentsForm, self).__init__(*args, **kwargs)
@@ -98,15 +59,12 @@ class Auditee_commentsForm(forms.ModelForm):
         self.helper.layout = Layout(
             Div(
                 Field('auditee_status'),
-                Field('auditee_comments'),
+                Field('auditee_correction'),
                 )
             )
     class Meta:
         model = Audit_comments
-        fields = ['auditee_comments','auditee_status']
-
-
-
+        fields = ['auditee_correction','auditee_status']
 
 
 class NCR_commentsForm(forms.ModelForm):
@@ -143,7 +101,6 @@ class NCR_commentsForm(forms.ModelForm):
 
 class Verified_commentsForm(forms.ModelForm):
 
-
     verified_status = forms.ChoiceField(choices=default_choices.verifychoice)
 
     def __init__(self, *args, **kwargs):
@@ -158,7 +115,6 @@ class Verified_commentsForm(forms.ModelForm):
     class Meta:
         model = Audit_comments
         fields = ['verified_comments','verified_status',]
-
         widgets = {
             'verified_comments': forms.Textarea(attrs={'rows': 3, 'cols': 50}),
         }
@@ -166,6 +122,7 @@ class Verified_commentsForm(forms.ModelForm):
 class mr_commentsForm(forms.ModelForm):
 
     mr_status = forms.ChoiceField(choices=default_choices.mr_choice)
+    mr_comments = forms.CharField(widget=forms.Textarea(attrs={'rows': 2, 'cols': 22}))
 
     def __init__(self, *args, **kwargs):
         super(mr_commentsForm, self).__init__(*args, **kwargs)
@@ -179,6 +136,3 @@ class mr_commentsForm(forms.ModelForm):
     class Meta:
         model = Audit_comments
         fields = ['mr_comments','mr_status',]
-        widgets = {
-            'mr_comments': forms.Textarea(attrs={'rows': 2, 'cols': 22}),
-        }
